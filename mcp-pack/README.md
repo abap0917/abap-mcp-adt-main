@@ -1,5 +1,7 @@
 # MCP ABAP ADT — 即用配置包 (mcp-pack)
 
+> 📘 **部署到任何 agent 的完整手册**：[`DEPLOYMENT-GUIDE.md`](DEPLOYMENT-GUIDE.md)（如何部署 / 注意点 / 错误处理速查表）
+
 把 SAP ABAP 开发能力(默认 174 个,全集 344 个 MCP 工具,含 SPRO/IMG 配置与调试器)接入 **任何** MCP 兼容 agent 的一键配置包。
 所有 agent 共享同一个 `mcp-pack/.env` 连接文件 —— **只改一处,处处生效**。
 
