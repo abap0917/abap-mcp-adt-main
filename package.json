@@ -1,0 +1,230 @@
+﻿{
+    "name":  "@babamba2/abap-mcp-adt-powerup",
+    "mcpName":  "io.github.babamba2/abap-mcp-adt-powerup",
+    "version":  "4.9.0",
+    "main":  "dist/index.js",
+    "types":  "dist/index.d.ts",
+    "exports":  {
+                    ".":  {
+                              "types":  "./dist/index.d.ts",
+                              "import":  "./dist/index.js",
+                              "require":  "./dist/index.js"
+                          },
+                    "./handlers":  {
+                                       "types":  "./dist/lib/handlers/index.d.ts",
+                                       "import":  "./dist/lib/handlers/index.js",
+                                       "require":  "./dist/lib/handlers/index.js"
+                                   },
+                    "./utils":  {
+                                    "types":  "./dist/lib/utils.d.ts",
+                                    "import":  "./dist/lib/utils.js",
+                                    "require":  "./dist/lib/utils.js"
+                                },
+                    "./server":  {
+                                     "types":  "./dist/server/index.d.ts",
+                                     "import":  "./dist/server/index.js",
+                                     "require":  "./dist/server/index.js"
+                                 }
+                },
+    "typesVersions":  {
+                          "*":  {
+                                    "handlers":  [
+                                                     "dist/lib/handlers/index.d.ts"
+                                                 ],
+                                    "utils":  [
+                                                  "dist/lib/utils.d.ts"
+                                              ],
+                                    "server":  [
+                                                   "dist/server/index.d.ts"
+                                               ]
+                                }
+                      },
+    "scripts":  {
+                    "test:init":  "node -e \"const fs=require(\u0027fs\u0027),s=\u0027tests/test-config.yaml\u0027,t=s+\u0027.template\u0027;if(fs.existsSync(s)){console.log(s+\u0027 already exists, skipping (use test:reinit to overwrite)\u0027)}else{fs.copyFileSync(t,s);console.log(\u0027Created \u0027+s+\u0027 鈥?edit lines marked CHANGE\u0027)}\"",
+                    "test:reinit":  "node -e \"const fs=require(\u0027fs\u0027),s=\u0027tests/test-config.yaml\u0027,t=s+\u0027.template\u0027;fs.copyFileSync(t,s);console.log(\u0027Recreated \u0027+s+\u0027 from template\u0027)\"",
+                    "test":  "jest --passWithNoTests",
+                    "test:integration":  "jest --testPathPatterns=integration --runInBand --passWithNoTests --forceExit",
+                    "test:high":  "jest --testPathPatterns=\u0027integration.*High\u0027 --runInBand --passWithNoTests --forceExit",
+                    "test:low":  "jest --testPathPatterns=\u0027integration.*Low\u0027 --runInBand --passWithNoTests --forceExit",
+                    "test:check":  "npx tsc --noEmit -p tsconfig.test.json",
+                    "shared:setup":  "jest --testPathPatterns=\u0027admin/shared-deps/setup\u0027 --testPathIgnorePatterns=\u0027[]\u0027 --runInBand --passWithNoTests",
+                    "shared:teardown":  "jest --testPathPatterns=\u0027admin/shared-deps/teardown\u0027 --testPathIgnorePatterns=\u0027[]\u0027 --runInBand --passWithNoTests",
+                    "shared:check":  "jest --testPathPatterns=\u0027admin/shared-deps/check\u0027 --testPathIgnorePatterns=\u0027[]\u0027 --passWithNoTests",
+                    "lint":  "npx biome check --write src",
+                    "lint:check":  "npx biome check src",
+                    "format":  "npx biome format --write src",
+                    "build":  "npx biome check --write --diagnostic-level=error src \u0026\u0026 npx tsc -p tsconfig.json",
+                    "build:fast":  "npx tsc -p tsconfig.json",
+                    "check-todos":  "node tools/check-todos.js",
+                    "start":  "node ./bin/mcp-abap-adt.js",
+                    "start:http":  "node ./bin/mcp-abap-adt.js --transport=http",
+                    "start:sse":  "node ./bin/mcp-abap-adt.js --transport=sse",
+                    "dev":  "npm run build \u0026\u0026 npx @modelcontextprotocol/inspector node ./dist/server/launcher.js --transport=stdio",
+                    "dev:http":  "npm run build \u0026\u0026 node ./tools/dev-http-v2.js",
+                    "dev:sse":  "npm run build \u0026\u0026 node ./tools/dev-sse-v2.js",
+                    "kill-ports":  "lsof -ti:3000,3001,4000,4001,5000,6274,6277 | xargs -r kill -9 2\u003e/dev/null || true",
+                    "auth":  "npx sap-abap-auth auth",
+                    "clean":  "make clean",
+                    "chrono":  "./tools/version-stats.sh",
+                    "smoke:mcp:crud":  "node ./tools/mcp-crud-smoke.js",
+                    "smoke:mcp:matrix":  "node ./tools/mcp-crud-matrix.js",
+                    "docs:tools":  "node ./tools/generate-tools-docs.js",
+                    "prepublishOnly":  "npm run build",
+                    "package":  "npm pack",
+                    "package:build":  "npm run build \u0026\u0026 npm pack",
+                    "docker:pack":  "npm pack \u0026\u0026 mkdir -p docker/packages \u0026\u0026 mv *.tgz docker/packages/",
+                    "docker:build":  "cd docker \u0026\u0026 docker-compose build",
+                    "docker:build:package":  "npm run docker:pack \u0026\u0026 cd docker \u0026\u0026 docker-compose -f docker-compose.package.yml build",
+                    "docker:build:headerless":  "cd docker \u0026\u0026 docker-compose -f docker-compose.headerless.yml build",
+                    "docker:up":  "cd docker \u0026\u0026 docker-compose up -d",
+                    "docker:up:package":  "npm run docker:pack \u0026\u0026 cd docker \u0026\u0026 docker-compose -f docker-compose.package.yml up -d",
+                    "docker:up:headerless":  "cd docker \u0026\u0026 docker-compose -f docker-compose.headerless.yml up -d",
+                    "docker:down":  "cd docker \u0026\u0026 docker-compose down",
+                    "docker:down:package":  "cd docker \u0026\u0026 docker-compose -f docker-compose.package.yml down",
+                    "docker:down:headerless":  "cd docker \u0026\u0026 docker-compose -f docker-compose.headerless.yml down",
+                    "docker:logs":  "cd docker \u0026\u0026 docker-compose logs -f",
+                    "docker:logs:package":  "cd docker \u0026\u0026 docker-compose -f docker-compose.package.yml logs -f",
+                    "docker:logs:headerless":  "cd docker \u0026\u0026 docker-compose -f docker-compose.headerless.yml logs -f",
+                    "docker:rebuild":  "npm run docker:down \u0026\u0026 npm run docker:build \u0026\u0026 npm run docker:up",
+                    "docker:rebuild:package":  "npm run docker:down:package \u0026\u0026 npm run docker:build:package \u0026\u0026 npm run docker:up:package",
+                    "docker:rebuild:headerless":  "npm run docker:down:headerless \u0026\u0026 npm run docker:build:headerless \u0026\u0026 npm run docker:up:headerless",
+                    "prepare":  "husky",
+                    "postbuild":  "node tools/copy-abap.js"
+                },
+    "keywords":  [
+                     "abap",
+                     "sap",
+                     "adt",
+                     "mcp",
+                     "model-context-protocol",
+                     "mcp-server",
+                     "abap-cloud",
+                     "sap-btp",
+                     "xsuaa",
+                     "jwt-auth",
+                     "service-key",
+                     "crud"
+                 ],
+    "author":  "babamba2 \u003cpsspss1122@gmail.com\u003e",
+    "description":  "SAP ABAP ADT MCP server with full CRUD for on-prem and ABAP Cloud (BTP), plus JWT/XSUAA and service-key destination auth",
+    "license":  "MIT",
+    "repository":  {
+                       "type":  "git",
+                       "url":  "git+https://github.com/babamba2/abap-mcp-adt-powerup.git"
+                   },
+    "devDependencies":  {
+                            "@biomejs/biome":  "^2.4.6",
+                            "@modelcontextprotocol/inspector":  "^0.21.1",
+                            "@types/jest":  "^30.0.0",
+                            "@types/js-yaml":  "^4.0.9",
+                            "@types/node":  "^25.3.5",
+                            "commander":  "^14.0.3",
+                            "cors":  "^2.8.6",
+                            "dotenv":  "^17.3.1",
+                            "express":  "^5.1.0",
+                            "express-rate-limit":  "^8.3.0",
+                            "husky":  "^9.1.7",
+                            "jest":  "^30.2.0",
+                            "jest-util":  "^30.2.0",
+                            "lint-staged":  "^16.4.0",
+                            "open":  "^11.0.0",
+                            "pino":  "^10.3.0",
+                            "pino-pretty":  "^13.1.3",
+                            "serve-handler":  "^6.1.7",
+                            "ts-jest":  "^29.2.0",
+                            "tsx":  "^4.21.0",
+                            "typescript":  "^5.9.2",
+                            "yaml":  "^2.8.1"
+                        },
+    "dependencies":  {
+                         "@babamba2/mcp-abap-adt-clients":  "^3.13.1",
+                         "@babamba2/mcp-abap-adt-auth-broker":  "^1.0.5",
+                         "@babamba2/mcp-abap-adt-auth-providers":  "^1.0.5",
+                         "@babamba2/mcp-abap-adt-auth-stores":  "^1.0.4",
+                         "@babamba2/mcp-abap-connection":  "^1.5.3",
+                         "@babamba2/mcp-abap-adt-header-validator":  "^0.1.8",
+                         "@babamba2/mcp-abap-adt-interfaces":  "^5.0.0",
+                         "@babamba2/mcp-abap-adt-logger":  "^0.1.4",
+                         "@modelcontextprotocol/sdk":  "^1.27.1",
+                         "axios":  "^1.13.6",
+                         "fast-xml-parser":  "^5.4.2",
+                         "js-yaml":  "^4.1.1",
+                         "pino":  "^10.1.0",
+                         "pino-pretty":  "^13.1.3",
+                         "xml-js":  "^1.6.11",
+                         "zod":  "^4.3.6"
+                     },
+    "optionalDependencies":  {
+                                 "node-rfc":  "^3.3.1",
+                                 "@napi-rs/keyring":  "^1.1.0"
+                             },
+    "engines":  {
+                    "node":  "\u003e=20.0.0",
+                    "npm":  "\u003e=9.0.0"
+                },
+    "files":  [
+                  "dist/",
+                  "bin/",
+                  "docs/",
+                  "README.md",
+                  "LICENSE",
+                  "CHANGELOG.md"
+              ],
+    "bin":  {
+                "mcp-abap-adt":  "bin/mcp-abap-adt.js",
+                "mcp-abap-adt-v2":  "bin/mcp-abap-adt-v2.js"
+            },
+    "jest":  {
+                 "preset":  "ts-jest",
+                 "testEnvironment":  "node",
+                 "roots":  [
+                               "\u003crootDir\u003e/src"
+                           ],
+                 "testMatch":  [
+                                   "**/__tests__/**/*.test.ts"
+                               ],
+                 "transform":  {
+                                   "^.+\\.ts$":  [
+                                                     "ts-jest",
+                                                     {
+                                                         "tsconfig":  "tsconfig.test.json"
+                                                     }
+                                                 ]
+                               },
+                 "moduleFileExtensions":  [
+                                              "ts",
+                                              "js",
+                                              "json"
+                                          ],
+                 "moduleNameMapper":  {
+                                          "^(\\.{1,2}/.*)\\.js$":  "$1"
+                                      },
+                 "collectCoverageFrom":  [
+                                             "src/**/*.ts",
+                                             "!src/**/*.test.ts",
+                                             "!src/**/__tests__/**",
+                                             "!src/**/index.ts"
+                                         ],
+                 "testPathIgnorePatterns":  [
+                                                "__tests__/admin/"
+                                            ],
+                 "maxWorkers":  1,
+                 "testTimeout":  600000,
+                 "globalSetup":  "\u003crootDir\u003e/src/__tests__/integration/globalSetup.ts"
+             },
+    "lint-staged":  {
+                        "src/**/*.{ts,js}":  [
+                                                 "biome check --write"
+                                             ]
+                    },
+    "private":  false,
+    "directories":  {
+                        "doc":  "docs",
+                        "test":  "tests"
+                    },
+    "type":  "commonjs",
+    "bugs":  {
+                 "url":  "https://github.com/babamba2/abap-mcp-adt-powerup/issues"
+             },
+    "homepage":  "https://github.com/babamba2/abap-mcp-adt-powerup#readme"
+}

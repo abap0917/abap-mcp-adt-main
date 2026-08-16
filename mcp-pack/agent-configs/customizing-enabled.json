@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "mcp-abap-adt-customizing": {
+      "command": "node",
+      "args": [
+        "C:/Users/Lenovo/Desktop/ABAP-MCP/abap-mcp-adt-main/abap-mcp-adt-main/dist/server/launcher.js",
+        "--env-path=C:/Users/Lenovo/Desktop/ABAP-MCP/abap-mcp-adt-main/abap-mcp-adt-main/mcp-pack/.env",
+        "--exposition=readonly,high,customizing,debug"
+      ],
+      "env": { "NODE_TLS_REJECT_UNAUTHORIZED": "0" },
+      "disabled": false
+    }
+  }
+}

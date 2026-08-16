@@ -1,0 +1,57 @@
+# Dependencies
+node_modules/
+
+# Secrets / environment (keep only .env.example templates)
+.env
+.env.local
+.env.*.local
+*.env
+!*.env.example
+
+# Real test config (contains transports and credentials)
+tests/test-config.yaml
+
+# Local state (locks, sessions, logs, runtime data)
+.locks/
+*.locks.json
+.sessions/
+*.sessions.json
+logs/
+*.log
+data/
+.omc/
+.sc4sap/
+.entire/
+.getobjectslist.cache.json
+
+# Editor / local agent state
+.idea/
+.vscode/
+.cursor/
+.claude/
+*.suo
+*.sw?
+desktop.ini
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Caches / build intermediates
+*.tsbuildinfo
+.eslintcache
+.npm
+.npm-cache/**
+build/
+coverage/
+.smithery/
+*.mcpb
+
+# Other-project artifacts (not used in this repo)
+mdd.json
+SAP_ADT.json
+dev.json
+sk.json
+fr0ster-mcp-abap-adt-*.tgz
+src/generated/
+tools/antlr/

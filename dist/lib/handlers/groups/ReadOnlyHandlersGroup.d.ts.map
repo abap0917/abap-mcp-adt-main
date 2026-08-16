@@ -1,0 +1,1 @@
+{"version":3,"file":"ReadOnlyHandlersGroup.d.ts","sourceRoot":"","sources":["../../../../src/lib/handlers/groups/ReadOnlyHandlersGroup.ts"],"names":[],"mappings":"AA8HA,OAAO,EAAE,gBAAgB,EAAE,MAAM,6BAA6B,CAAC;AAC/D,OAAO,KAAK,EAAE,YAAY,EAAE,MAAM,kBAAkB,CAAC;AAErD;;;GAGG;AACH,qBAAa,qBAAsB,SAAQ,gBAAgB;IACzD,SAAS,CAAC,SAAS,SAAsB;IAEzC;;OAEG;IACH,WAAW,IAAI,YAAY,EAAE;CAuI9B"}

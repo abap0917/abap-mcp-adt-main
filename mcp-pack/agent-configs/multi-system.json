@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "mcp-abap-dev": {
+      "command": "node",
+      "args": [
+        "C:/Users/Lenovo/Desktop/ABAP-MCP/abap-mcp-adt-main/abap-mcp-adt-main/dist/server/launcher.js",
+        "--env-path=C:/Users/Lenovo/Desktop/ABAP-MCP/abap-mcp-adt-main/abap-mcp-adt-main/mcp-pack/dev.env"
+      ],
+      "env": { "NODE_TLS_REJECT_UNAUTHORIZED": "0" },
+      "disabled": false
+    },
+    "mcp-abap-prod": {
+      "command": "node",
+      "args": [
+        "C:/Users/Lenovo/Desktop/ABAP-MCP/abap-mcp-adt-main/abap-mcp-adt-main/dist/server/launcher.js",
+        "--env-path=C:/Users/Lenovo/Desktop/ABAP-MCP/abap-mcp-adt-main/abap-mcp-adt-main/mcp-pack/prod.env"
+      ],
+      "env": { "NODE_TLS_REJECT_UNAUTHORIZED": "0" },
+      "disabled": false
+    }
+  }
+}
