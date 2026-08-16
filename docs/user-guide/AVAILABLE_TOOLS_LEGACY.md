@@ -5,20 +5,29 @@ Generated from code in `src/handlers/**` (not from docs).
 Tools available on legacy SAP systems (BASIS < 7.50) connected via RFC.
 Legacy systems support a subset of tools — primarily Class, Interface, View, Program, Function Group/Module, Package (read/update/delete), Include, Unit Test, and common utilities.
 
-- Total tools: 121
-- Read-Only: 11
-- High-Level: 50
-- Low-Level: 60
+- Total tools: 161
+- Read-Only: 20
+- High-Level: 69
+- Low-Level: 72
 
 ## Navigation
 
 - [Read-Only Group](#read-only-group)
   - [Class](#read-only-class)
     - [ReadClass](#readclass-read-only-class)
+  - [Customizing](#read-only-customizing)
+    - [CustomizingDescribe](#customizingdescribe-read-only-customizing)
+    - [CustomizingRead](#customizingread-read-only-customizing)
+    - [ImgSearch](#imgsearch-read-only-customizing)
+  - [Enhancement](#read-only-enhancement)
+    - [GetBadiImplementations](#getbadiimplementations-read-only-enhancement)
   - [Function Group](#read-only-function-group)
     - [ReadFunctionGroup](#readfunctiongroup-read-only-function-group)
   - [Function Module](#read-only-function-module)
     - [ReadFunctionModule](#readfunctionmodule-read-only-function-module)
+  - [Gui Status](#read-only-gui-status)
+    - [GetGuiStatusList](#getguistatuslist-read-only-gui-status)
+    - [ReadGuiStatus](#readguistatus-read-only-gui-status)
   - [Include](#read-only-include)
     - [GetInclude](#getinclude-read-only-include)
     - [GetIncludesList](#getincludeslist-read-only-include)
@@ -30,6 +39,11 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
   - [Program](#read-only-program)
     - [GetProgFullCode](#getprogfullcode-read-only-program)
     - [ReadProgram](#readprogram-read-only-program)
+  - [Screen](#read-only-screen)
+    - [GetScreensList](#getscreenslist-read-only-screen)
+    - [ReadScreen](#readscreen-read-only-screen)
+  - [System](#read-only-system)
+    - [ReloadProfile](#reloadprofile-read-only-system)
   - [View](#read-only-view)
     - [ReadView](#readview-read-only-view)
 - [High-Level Group](#high-level-group)
@@ -50,6 +64,8 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
     - [UpdateLocalMacros](#updatelocalmacros-high-level-class)
     - [UpdateLocalTestClass](#updatelocaltestclass-high-level-class)
     - [UpdateLocalTypes](#updatelocaltypes-high-level-class)
+  - [Common](#high-level-common)
+    - [ActivateObjects](#activateobjects-high-level-common)
   - [Function](#high-level-function)
     - [CreateFunctionGroup](#createfunctiongroup-high-level-function)
     - [CreateFunctionModule](#createfunctionmodule-high-level-function)
@@ -61,6 +77,16 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
   - [Function Module](#high-level-function-module)
     - [DeleteFunctionModule](#deletefunctionmodule-high-level-function-module)
     - [GetFunctionModule](#getfunctionmodule-high-level-function-module)
+  - [Gui Status](#high-level-gui-status)
+    - [CreateGuiStatus](#createguistatus-high-level-gui-status)
+    - [DeleteGuiStatus](#deleteguistatus-high-level-gui-status)
+    - [GetGuiStatus](#getguistatus-high-level-gui-status)
+    - [PatchGuiStatus](#patchguistatus-high-level-gui-status)
+    - [UpdateGuiStatus](#updateguistatus-high-level-gui-status)
+  - [Include](#high-level-include)
+    - [CreateInclude](#createinclude-high-level-include)
+    - [DeleteInclude](#deleteinclude-high-level-include)
+    - [UpdateInclude](#updateinclude-high-level-include)
   - [Interface](#high-level-interface)
     - [CreateInterface](#createinterface-high-level-interface)
     - [DeleteInterface](#deleteinterface-high-level-interface)
@@ -73,6 +99,18 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
     - [DeleteProgram](#deleteprogram-high-level-program)
     - [GetProgram](#getprogram-high-level-program)
     - [UpdateProgram](#updateprogram-high-level-program)
+  - [Screen](#high-level-screen)
+    - [CreateScreen](#createscreen-high-level-screen)
+    - [DeleteScreen](#deletescreen-high-level-screen)
+    - [GetScreen](#getscreen-high-level-screen)
+    - [UpdateScreen](#updatescreen-high-level-screen)
+  - [Text Element](#high-level-text-element)
+    - [CreateTextElement](#createtextelement-high-level-text-element)
+    - [DeleteTextElement](#deletetextelement-high-level-text-element)
+    - [GetTextElement](#gettextelement-high-level-text-element)
+    - [ReadTextElementsBulk](#readtextelementsbulk-high-level-text-element)
+    - [UpdateTextElement](#updatetextelement-high-level-text-element)
+    - [WriteTextElementsBulk](#writetextelementsbulk-high-level-text-element)
   - [Unit Test](#high-level-unit-test)
     - [CreateCdsUnitTest](#createcdsunittest-high-level-unit-test)
     - [CreateUnitTest](#createunittest-high-level-unit-test)
@@ -127,6 +165,13 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
     - [UpdateFunctionModuleLow](#updatefunctionmodulelow-low-level-function)
     - [ValidateFunctionGroupLow](#validatefunctiongrouplow-low-level-function)
     - [ValidateFunctionModuleLow](#validatefunctionmodulelow-low-level-function)
+  - [Gui Status](#low-level-gui-status)
+    - [ActivateGuiStatusLow](#activateguistatuslow-low-level-gui-status)
+    - [CreateGuiStatusLow](#createguistatuslow-low-level-gui-status)
+    - [DeleteGuiStatusLow](#deleteguistatuslow-low-level-gui-status)
+    - [LockGuiStatusLow](#lockguistatuslow-low-level-gui-status)
+    - [UnlockGuiStatusLow](#unlockguistatuslow-low-level-gui-status)
+    - [UpdateGuiStatusLow](#updateguistatuslow-low-level-gui-status)
   - [Interface](#low-level-interface)
     - [ActivateInterfaceLow](#activateinterfacelow-low-level-interface)
     - [CheckInterfaceLow](#checkinterfacelow-low-level-interface)
@@ -151,6 +196,13 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
     - [UnlockProgramLow](#unlockprogramlow-low-level-program)
     - [UpdateProgramLow](#updateprogramlow-low-level-program)
     - [ValidateProgramLow](#validateprogramlow-low-level-program)
+  - [Screen](#low-level-screen)
+    - [ActivateScreenLow](#activatescreenlow-low-level-screen)
+    - [CreateScreenLow](#createscreenlow-low-level-screen)
+    - [DeleteScreenLow](#deletescreenlow-low-level-screen)
+    - [LockScreenLow](#lockscreenlow-low-level-screen)
+    - [UnlockScreenLow](#unlockscreenlow-low-level-screen)
+    - [UpdateScreenLow](#updatescreenlow-low-level-screen)
   - [View](#low-level-view)
     - [ActivateViewLow](#activateviewlow-low-level-view)
     - [CheckViewLow](#checkviewlow-low-level-view)
@@ -180,6 +232,75 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
 **Parameters:**
 - `class_name` (string, required) - Class name (e.g., ZCL_MY_CLASS).
 - `version` (string, optional (default: active)) - Version to read: 
+
+---
+
+<a id="read-only-customizing"></a>
+### Read-Only / Customizing
+
+<a id="customizingdescribe-read-only-customizing"></a>
+#### CustomizingDescribe (Read-Only / Customizing)
+**Description:** [customizing] Describe a customizing object (maintenance view or config table): full table set (base + text), key fields, auth group, IMG activity, delivery class and the R3TR transport object (VDAT/TABU/CDAT).
+
+**Source:** `src/handlers/customizing/readonly/handleCustomizingDescribe.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `language` (string, optional (default: E)) - Description language (default E).
+- `object_name` (string, required) - Maintenance view name (TVDIR) or base table name (DD02L), e.g. V_T001 or T001.
+
+---
+
+<a id="customizingread-read-only-customizing"></a>
+#### CustomizingRead (Read-Only / Customizing)
+**Description:** [customizing] Read current customizing data for a config object (maintenance view or table), optionally filtered by an org-unit key field value.
+
+**Source:** `src/handlers/customizing/readonly/handleCustomizingRead.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `key_field` (string, optional) - Key field to filter on (e.g. BUKRS, WERKS, VKORG). Omit to read the first rows.
+- `key_value` (string, optional) - Key field value to filter on (e.g. 
+- `max_rows` (number, optional (default: 100)) - Maximum rows (default 100).
+- `object_name` (string, required) - Maintenance view or base table, e.g. V_T001 / T001 / V_T001W.
+
+---
+
+<a id="imgsearch-read-only-customizing"></a>
+#### ImgSearch (Read-Only / Customizing)
+**Description:** [customizing] Search SAP IMG/SPRO activities by keyword (activity title). Prefers the STREE search-text index when the customizing engine is deployed; falls back to the raw CUS_IMGACT tables. Pass a namespace (e.g. 
+
+**Source:** `src/handlers/customizing/readonly/handleImgSearch.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `in_scope_only` (boolean, optional (default: false)) - Keep only activities in the client
+- `keyword` (string, required) - Keyword to match against IMG activity titles.
+- `language` (string, optional (default: E)) - IMG language (default E).
+- `max_results` (number, optional (default: 200)) - Maximum hits (default 200).
+- `namespace` (string, optional) - Activity-ID prefix to scope the raw search by, e.g. 
+
+---
+
+<a id="read-only-enhancement"></a>
+### Read-Only / Enhancement
+
+<a id="getbadiimplementations-read-only-enhancement"></a>
+#### GetBadiImplementations (Read-Only / Enhancement)
+**Description:** [read-only] Find implementations of a (classic) BAdI definition. Use during symptom analysis when a standard SAP BAdI is implicated — answers 
+
+**Source:** `src/handlers/enhancement/readonly/handleGetBadiImplementations.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `active_only` (boolean, optional (default: true)) - Restrict to active implementations only. Default: true.
+- `badi_definition` (string, required) - BAdI definition name (e.g., ME_PROCESS_PO_CUST). Will be uppercased.
+- `customer_only` (boolean, optional (default: true)) - Restrict to Z*/Y* implementations. Default: true. Set false to include SAP-shipped implementations.
+- `include_methods` (boolean, optional (default: true)) - Include the list of redefined method names per implementation (from SXC_EXIT). Default: true.
 
 ---
 
@@ -215,6 +336,35 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
 - `function_group_name` (string, required) - Function group name containing the function module (e.g., Z_MY_FG).
 - `function_module_name` (string, required) - Function module name (e.g., Z_MY_FM).
 - `version` (string, optional (default: active)) - Version to read: 
+
+---
+
+<a id="read-only-gui-status"></a>
+### Read-Only / Gui Status
+
+<a id="getguistatuslist-read-only-gui-status"></a>
+#### GetGuiStatusList (Read-Only / Gui Status)
+**Description:** [read-only] List all GUI statuses belonging to an ABAP program.
+
+**Source:** `src/handlers/gui_status/readonly/handleGetGuiStatusList.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `program_name` (string, required) - Program name (e.g., SAPMV45A).
+
+---
+
+<a id="readguistatus-read-only-gui-status"></a>
+#### ReadGuiStatus (Read-Only / Gui Status)
+**Description:** [read-only] Read ABAP GUI Status definition (statuses, function codes, menus, toolbars, titles) for a program.
+
+**Source:** `src/handlers/gui_status/readonly/handleReadGuiStatus.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `program_name` (string, required) - Parent program name (e.g., SAPMV45A).
 
 ---
 
@@ -325,6 +475,52 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
 **Parameters:**
 - `program_name` (string, required) - Program name (e.g., Z_MY_PROGRAM).
 - `version` (string, optional (default: active)) - Version to read: 
+
+---
+
+<a id="read-only-screen"></a>
+### Read-Only / Screen
+
+<a id="getscreenslist-read-only-screen"></a>
+#### GetScreensList (Read-Only / Screen)
+**Description:** [read-only] List all screens (dynpros) belonging to an ABAP program.
+
+**Source:** `src/handlers/screen/readonly/handleGetScreensList.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `program_name` (string, required) - Program name (e.g., SAPMV45A).
+
+---
+
+<a id="readscreen-read-only-screen"></a>
+#### ReadScreen (Read-Only / Screen)
+**Description:** [read-only] Read ABAP Screen (Dynpro) flow logic source code, fields, and metadata.
+
+**Source:** `src/handlers/screen/readonly/handleReadScreen.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `program_name` (string, required) - Parent program name (e.g., SAPMV45A).
+- `screen_number` (string, required) - Screen number (e.g., 0100).
+
+---
+
+<a id="read-only-system"></a>
+### Read-Only / System
+
+<a id="reloadprofile-read-only-system"></a>
+#### ReloadProfile (Read-Only / System)
+**Description:** [system] Reload the active SAP profile from .sc4sap/active-profile.txt and reset the cached connection. Called by the sc4sap plugin after switching profiles. Returns the newly active alias, host, tier, and readonly status.
+
+**Source:** `src/handlers/system/readonly/handleReloadProfile.ts`
+
+**Available in:** `onprem`, `cloud`, `legacy`
+
+**Parameters:**
+- None
 
 ---
 
@@ -595,6 +791,24 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
 
 ---
 
+<a id="high-level-common"></a>
+### High-Level / Common
+
+<a id="activateobjects-high-level-common"></a>
+#### ActivateObjects (High-Level / Common)
+**Description:** [high-level] Activate a set of ABAP objects in a single call. Uses the ADT mass-activation endpoint (/sap/bc/adt/activation/runs) so cyclic references between siblings (e.g. main program + multiple cross-referencing includes) resolve in one compilation scope. Returns per-object status, errors, warnings. Falls back to /sap/bc/adt/activation on legacy systems.
+
+**Source:** `src/handlers/common/high/handleActivateObjects.ts`
+
+**Available in:** `onprem`, `cloud`, `legacy`
+
+**Parameters:**
+- `objects` (array, required) - Objects to activate in one batch. Supply either explicit uri, or name+type (and parent_name for FUGR/FF, FUGR/I).
+- `preaudit` (boolean, optional) - Request pre-audit before activation. Default true.
+- `run_timeout_ms` (number, optional) - Max time to wait for the activation run to finish (runs endpoint only). Default 120000.
+
+---
+
 <a id="high-level-function"></a>
 ### High-Level / Function
 
@@ -659,7 +873,7 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
 - `function_group_name` (string, required) - Function group name containing the function module (e.g., ZOK_FG_MCP01).
 - `function_module_name` (string, required) - Function module name (e.g., Z_TEST_FM_MCP01). Function module must already exist.
 - `source_code` (string, required) - Complete ABAP function module source code. Must include FUNCTION statement with parameters and ENDFUNCTION. Example:\n\nFUNCTION Z_TEST_FM\n  IMPORTING\n    VALUE(iv_input) TYPE string\n  EXPORTING\n    VALUE(ev_output) TYPE string.\n  \n  ev_output = iv_input.\nENDFUNCTION.
-- `transport_request` (string, optional) - Transport request number (e.g., E19K905635). Required for transportable function modules.
+- `transport_request` (string, optional) - Transport request number (e.g., E19K905635). Required for transportable function modules. For local objects ($TMP package) this can be omitted — the handler defaults to 
 
 ---
 
@@ -724,6 +938,147 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
 - `function_group_name` (string, required) - FunctionGroup name containing the function module (e.g., Z_MY_FUNCTIONGROUP).
 - `function_module_name` (string, required) - FunctionModule name (e.g., Z_MY_FUNCTIONMODULE).
 - `version` (string, optional (default: active)) - Version to read: 
+
+---
+
+<a id="high-level-gui-status"></a>
+### High-Level / Gui Status
+
+<a id="createguistatus-high-level-gui-status"></a>
+#### CreateGuiStatus (High-Level / Gui Status)
+**Description:** Create a new ABAP GUI Status on an existing program. Optionally activates after creation.
+
+**Source:** `src/handlers/gui_status/high/handleCreateGuiStatus.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `activate` (boolean, optional) - Activate after creation. Default: false.
+- `description` (string, optional) - GUI Status description.
+- `program_name` (string, required) - Parent program name (e.g., Z_MY_PROGRAM).
+- `status_name` (string, required) - GUI Status name to create (e.g., MAIN_STATUS).
+- `status_type` (string, optional) - Status type: 
+- `transport_request` (string, optional) - Transport request number.
+
+---
+
+<a id="deleteguistatus-high-level-gui-status"></a>
+#### DeleteGuiStatus (High-Level / Gui Status)
+**Description:** Delete an ABAP GUI Status from a program. Handles lock/unlock automatically.
+
+**Source:** `src/handlers/gui_status/high/handleDeleteGuiStatus.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `program_name` (string, required) - Parent program name.
+- `status_name` (string, required) - GUI Status name to delete.
+- `transport_request` (string, optional) - Transport request number.
+
+---
+
+<a id="getguistatus-high-level-gui-status"></a>
+#### GetGuiStatus (High-Level / Gui Status)
+**Description:** Get ABAP GUI Status definition including statuses, function codes, menus, toolbars, and titles.
+
+**Source:** `src/handlers/gui_status/high/handleGetGuiStatus.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `program_name` (string, required) - Parent program name (e.g., SAPMV45A).
+- `status_name` (string, optional) - Optional: filter to a specific GUI Status name. If omitted, returns all statuses.
+
+---
+
+<a id="patchguistatus-high-level-gui-status"></a>
+#### PatchGuiStatus (High-Level / Gui Status)
+**Description:** Row-level merge into an existing ABAP GUI Status definition. Fetches current CUA → merges the caller-supplied changes (by natural key) → writes merged result back. Rows / fields you omit are preserved. Safer default for targeted edits; use UpdateGuiStatus only when you truly want to replace the whole CUA.\n\nMerge keys per table:\n  STA=CODE, FUN=CODE, PFK=CODE+PFNO, BUT=PFK_CODE+CODE+NO, TIT=CODE,\n  MEN=CODE+NO, MTX=CODE, ACT=CODE+NO, SET=STATUS+FUNCTION,\n  DOC=OBJ_TYPE+OBJ_CODE, BIV=CODE+POS.
+
+**Source:** `src/handlers/gui_status/high/handlePatchGuiStatus.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `activate` (boolean, optional) - Activate after patch. Default: false.
+- `changes` (string, required) - Partial CUA data to merge into the current definition. Same shape as cua_data (ADM / STA / FUN / MEN / MTX / ACT / BUT / PFK / SET / DOC / TIT / BIV). Accepts JSON string or object. Rows matched by natural key are field-merged (changes win). New rows are appended. Omitted tables are left untouched.
+- `program_name` (string, required) - Parent program name.
+- `skip_validation` (boolean, optional) - Skip client-side validation of the merged result. Default: false.
+- `transport_request` (string, optional) - Transport request number.
+
+---
+
+<a id="updateguistatus-high-level-gui-status"></a>
+#### UpdateGuiStatus (High-Level / Gui Status)
+**Description:** ⚠️ FULL REPLACE — overwrites the entire GUI Status definition (all 12 CUA tables) for the program. Any row or field you omit is DROPPED. Always Read (ReadGuiStatus) → modify → Update, or use PatchGuiStatus for row-level merges. cua_data must include complete STA / FUN / PFK / BUT / TIT rows with all required fields (CODE, PFNO, FUNCODE, ...). Handles lock/unlock automatically.
+
+**Source:** `src/handlers/gui_status/high/handleUpdateGuiStatus.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `activate` (boolean, optional) - Activate after update. Default: false.
+- `cua_data` (string, required) - Complete CUA data — accepts either a JSON string or a structured object with ADM / STA / FUN / MEN / MTX / ACT / BUT / PFK / SET / DOC / TIT / BIV. Required row fields: STA.CODE, FUN.CODE, PFK.{CODE,PFNO,FUNCODE}, BUT.{PFK_CODE,CODE,NO,PFNO}, TIT.CODE. Missing rows are dropped — this is full-replace semantics.
+- `program_name` (string, required) - Parent program name.
+- `skip_validation` (boolean, optional) - Skip client-side schema validation. Default: false. Only set true if you know the CUA payload is intentionally partial and SAP will accept it.
+- `transport_request` (string, optional) - Transport request number.
+
+---
+
+<a id="high-level-include"></a>
+### High-Level / Include
+
+<a id="createinclude-high-level-include"></a>
+#### CreateInclude (High-Level / Include)
+**Description:** Create a new ABAP Include program (Type I, PROG/I) in SAP system. Creates the include object and registers it under the main program in D010INC. By default also auto-inserts an `INCLUDE <name>.` statement into the main program source so the include is actually used. Use UpdateInclude to set source code afterwards. Unlike CreateProgram with program_type=include (which creates PROG/P), this creates a proper PROG/I include. For mass-activation scenarios (many cross-referencing includes) pass source_code inline, set activate_main_program=false and skip_program_tree_check=true, then call ActivateObjects once with the full set.
+
+**Source:** `src/handlers/include/high/handleCreateInclude.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `activate_main_program` (boolean, optional) - When inserting INCLUDE statement into the main program, also activate the main program afterwards. Default: true (existing behavior). Set false when batching many includes so that activation is deferred to a single ActivateObjects call.
+- `description` (string, optional) - Include description (max 60 chars). If not provided, include_name will be used.
+- `include_name` (string, required) - Include program name (e.g., ZPAEK_TEST_INC01). Must follow SAP naming conventions (start with Z or Y).
+- `insert_into_main` (boolean, optional) - Auto-insert `INCLUDE <name>.` statement into the main program source. Default: true. Set false to skip main-program modification.
+- `main_program` (string, required) - Name of the main/master program that will contain this include (e.g., ZPAEK_TEST003). Required for proper include registration and activation.
+- `package_name` (string, required) - Package name (e.g., ZOK_LAB, $TMP for local objects).
+- `skip_program_tree_check` (boolean, optional) - Skip the post-create program-tree syntax check. Default: false (existing behavior). Set true when batching many cross-referencing includes — an intermediate include in a cycle will necessarily fail the tree check while its siblings are still missing.
+- `source_code` (string, optional) - Optional include body. When provided, the handler also locks, writes the source, and unlocks the new include in a single call. Never activates — caller must run a separate activation (ActivateObjects for batch scenarios).
+- `transport_request` (string, optional) - Transport request number (e.g., S4HK904224). Required for transportable packages. Optional for local ($TMP) objects.
+
+---
+
+<a id="deleteinclude-high-level-include"></a>
+#### DeleteInclude (High-Level / Include)
+**Description:** Delete an existing ABAP Include program (Type I) from the SAP system via ADT API. If the include is referenced by a main program, provide main_program so the handler can first remove the `INCLUDE <name>.` line from the main program source before deleting.
+
+**Source:** `src/handlers/include/high/handleDeleteInclude.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `include_name` (string, required) - Include program name to delete.
+- `main_program` (string, optional) - Optional. Name of the main program referencing this include. If provided, the `INCLUDE <name>.` line is removed from the main program source first (so the include is no longer referenced and delete succeeds).
+- `remove_from_main` (boolean, optional) - Auto-remove `INCLUDE <name>.` line from main program source. Default: true when main_program is provided. Set false to skip the main-program modification.
+- `transport_request` (string, optional) - Transport request number. Required for transportable packages. Optional for local ($TMP) objects. Also used for updating the main program if main_program is provided.
+
+---
+
+<a id="updateinclude-high-level-include"></a>
+#### UpdateInclude (High-Level / Include)
+**Description:** Update source code of an existing ABAP Include program (Type I). Locks the include, uploads new source code, and unlocks. Optionally activates after update. Use this instead of UpdateProgram for Type I include programs.
+
+**Source:** `src/handlers/include/high/handleUpdateInclude.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `activate` (boolean, optional) - Activate include after source update. Default: false. Set to true to activate immediately.
+- `include_name` (string, required) - Include program name. Must already exist as Type I include in SAP.
+- `main_program` (string, optional) - Name of the parent/master program that contains this include. When provided, a program-wide syntax check is run after the source is uploaded to catch ABAP errors in the new include code. Highly recommended.
+- `source_code` (string, required) - Complete ABAP include source code. Do NOT include a REPORT statement — include programs start directly with code or comments.
+- `transport_request` (string, optional) - Transport request number. Required for transportable packages.
 
 ---
 
@@ -869,6 +1224,180 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
 - `program_name` (string, required) - Program name (e.g., Z_TEST_PROGRAM_001). Program must already exist.
 - `source_code` (string, required) - Complete ABAP program source code.
 - `transport_request` (string, optional) - Transport request number (e.g., E19K905635). Required for transportable packages.
+
+---
+
+<a id="high-level-screen"></a>
+### High-Level / Screen
+
+<a id="createscreen-high-level-screen"></a>
+#### CreateScreen (High-Level / Screen)
+**Description:** Create a new ABAP Screen (Dynpro) on an existing program. Optionally activates.
+
+**Source:** `src/handlers/screen/high/handleCreateScreen.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `activate` (boolean, optional) - Activate after creation. Default: false.
+- `description` (string, optional) - Screen description.
+- `dynpro_data` (string, optional) - Full screen definition as JSON. If omitted, creates minimal screen.
+- `program_name` (string, required) - Parent program name.
+- `screen_number` (string, required) - Screen number to create (e.g., 0100).
+- `transport_request` (string, optional) - Transport request number.
+
+---
+
+<a id="deletescreen-high-level-screen"></a>
+#### DeleteScreen (High-Level / Screen)
+**Description:** Delete an ABAP Screen (Dynpro) from a program. Handles lock/unlock automatically.
+
+**Source:** `src/handlers/screen/high/handleDeleteScreen.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `program_name` (string, required) - Parent program name.
+- `screen_number` (string, required) - Screen number to delete.
+- `transport_request` (string, optional) - Transport request number.
+
+---
+
+<a id="getscreen-high-level-screen"></a>
+#### GetScreen (High-Level / Screen)
+**Description:** Get ABAP Screen (Dynpro) definition including metadata, fields, and flow logic source code.
+
+**Source:** `src/handlers/screen/high/handleGetScreen.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `program_name` (string, required) - Parent program name (e.g., SAPMV45A).
+- `screen_number` (string, required) - Screen number (e.g., 0100).
+
+---
+
+<a id="updatescreen-high-level-screen"></a>
+#### UpdateScreen (High-Level / Screen)
+**Description:** Update an ABAP Screen (Dynpro) definition. Provide full screen data as JSON. Handles lock/unlock automatically.
+
+**Source:** `src/handlers/screen/high/handleUpdateScreen.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `activate` (boolean, optional) - Activate after update. Default: false.
+- `dynpro_data` (string, required) - Complete screen definition as JSON (from GetScreen/ReadScreen).
+- `program_name` (string, required) - Parent program name.
+- `screen_number` (string, required) - Screen number (e.g., 0100).
+- `transport_request` (string, optional) - Transport request number.
+
+---
+
+<a id="high-level-text-element"></a>
+### High-Level / Text Element
+
+<a id="createtextelement-high-level-text-element"></a>
+#### CreateTextElement (High-Level / Text Element)
+**Description:** Add a text element (text symbol, selection text, program title, or list heading) to an ABAP program. Optionally activates after write.
+
+**Source:** `src/handlers/text_element/high/handleCreateTextElement.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `activate` (boolean, optional) - Activate the parent program after write. Default: false.
+- `key` (string, optional) - Row key. For 
+- `language` (string, optional) - Language key (1-char). Defaults to SAP logon language.
+- `program_name` (string, required) - Parent program name (e.g., Z_MY_PROGRAM).
+- `text` (string, required) - 
+- `text_type` (string, required) - 
+- `transport_request` (string, optional) - Transport request number.
+
+---
+
+<a id="deletetextelement-high-level-text-element"></a>
+#### DeleteTextElement (High-Level / Text Element)
+**Description:** Delete a text element from an ABAP program text pool. key=
+
+**Source:** `src/handlers/text_element/high/handleDeleteTextElement.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `activate` (boolean, optional) - Activate the parent program after write. Default: false.
+- `key` (string, optional) - Row key, or 
+- `language` (string, optional) - Language key. Defaults to SAP logon language.
+- `program_name` (string, required) - Parent program name.
+- `text_type` (string, required) - 
+- `transport_request` (string, optional) - Transport request number.
+
+---
+
+<a id="gettextelement-high-level-text-element"></a>
+#### GetTextElement (High-Level / Text Element)
+**Description:** Read ABAP program text pool (text symbols, selection texts, title, headings). Optionally filter by text_type / key.
+
+**Source:** `src/handlers/text_element/high/handleGetTextElement.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `key` (string, optional) - Optional: filter by row key (e.g., 
+- `language` (string, optional) - Language key (1-char, e.g., 
+- `program_name` (string, required) - Program name (e.g., Z_MY_PROGRAM).
+- `text_type` (string, optional) - Filter by ID: 
+
+---
+
+<a id="readtextelementsbulk-high-level-text-element"></a>
+#### ReadTextElementsBulk (High-Level / Text Element)
+**Description:** Read every text element (R/I/S/H) of a program in ONE call via the TPOOL RFC. Partitions rows by type and returns structured arrays. Use this instead of calling GetTextElement per row.
+
+**Source:** `src/handlers/text_element/high/handleReadTextElementsBulk.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `language` (string, optional) - 1-char language. Defaults to SAP logon language.
+- `program_name` (string, required) - Program name.
+
+---
+
+<a id="updatetextelement-high-level-text-element"></a>
+#### UpdateTextElement (High-Level / Text Element)
+**Description:** Update an existing text element in an ABAP program text pool. Handles lock/unlock automatically.
+
+**Source:** `src/handlers/text_element/high/handleUpdateTextElement.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `activate` (boolean, optional) - Activate the parent program after write. Default: false.
+- `key` (string, optional) - Row key. Required except for 
+- `language` (string, optional) - Language key. Defaults to SAP logon language.
+- `program_name` (string, required) - Parent program name.
+- `text` (string, required) - 
+- `text_type` (string, required) - 
+- `transport_request` (string, optional) - Transport request number.
+
+---
+
+<a id="writetextelementsbulk-high-level-text-element"></a>
+#### WriteTextElementsBulk (High-Level / Text Element)
+**Description:** Register many ABAP text elements (R/I/S/H) in ONE tool call via a single TPOOL RFC write. Use instead of calling CreateTextElement N times. With activate=false (default) the pool is staged INACTIVE — the parent program\
+
+**Source:** `src/handlers/text_element/high/handleWriteTextElementsBulk.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `activate` (boolean, optional) - false (default) — stage as INACTIVE (program activation promotes). true — write ACTIVE immediately.
+- `language` (string, optional) - 1-char language key (e.g. 
+- `program_name` (string, required) - Parent program name.
+- `replace_existing` (boolean, optional) - If true (default), the TPOOL is replaced with the provided entries only. If false, existing rows are preserved and provided rows merge by (type, key).
+- `text_elements` (array, required) - Array of entries. Each: { type: 
+- `transport_request` (string, optional) - Transport request number (informational).
 
 ---
 
@@ -1201,6 +1730,7 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
 - `package_name` (string, required) - Package name (e.g., ZOK_LOCAL, $TMP for local objects).
 - `session_id` (string, optional) - Session ID from GetSession. If not provided, a new session will be created.
 - `session_state` (object, optional) - Session state from GetSession (cookies, csrf_token, cookie_store). Required if session_id is provided.
+- `skip_check` (boolean, optional) - Skip post-create syntax check. Default: false. When false, runs a syntax check on the newly created class shell and surfaces any errors with line numbers.
 - `superclass` (string, optional) - Superclass name (optional).
 - `transport_request` (string, optional) - Transport request number (e.g., E19K905635). Required for transportable packages.
 
@@ -1342,6 +1872,7 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
 **Parameters:**
 - `class_name` (string, required) - Class name (e.g., ZCL_TEST_CLASS_001). Class must already exist.
 - `lock_handle` (string, required) - Lock handle from LockClass operation. Required for update operation.
+- `skip_check` (boolean, optional) - Skip pre-write syntax check on source_code. Default: false. When false, runs a syntax check on the proposed code BEFORE uploading it and surfaces any errors with line numbers — the broken source never lands on SAP.
 - `source_code` (string, required) - Complete ABAP class source code including CLASS DEFINITION and IMPLEMENTATION sections.
 
 ---
@@ -1359,6 +1890,7 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
 - `lock_handle` (string, required) - Test classes lock handle from LockClassTestClassesLow.
 - `session_id` (string, optional) - Session ID from GetSession. If not provided, a new session will be created.
 - `session_state` (object, optional) - Session state from GetSession (cookies, csrf_token, cookie_store). Required if session_id is provided.
+- `skip_check` (boolean, optional) - Skip post-write syntax check. Default: false. When false, runs a syntax check on the parent class after updating the test-classes include and surfaces any errors with line numbers.
 - `test_class_source` (string, required) - Complete ABAP Unit test class source code.
 
 ---
@@ -1608,6 +2140,7 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
 - `lock_handle` (string, required) - Lock handle from LockFunctionModule. Required for update operation.
 - `session_id` (string, optional) - Session ID from GetSession. If not provided, a new session will be created.
 - `session_state` (object, optional) - Session state from GetSession (cookies, csrf_token, cookie_store). Required if session_id is provided.
+- `skip_check` (boolean, optional) - Skip post-write syntax check. Default: false. When false, runs a syntax check on the staged inactive version after update and surfaces any errors with line numbers.
 - `source_code` (string, required) - Complete ABAP function module source code.
 - `transport_request` (string, optional) - Transport request number (e.g., E19K905635). Required for transportable objects locked in a request.
 
@@ -1644,6 +2177,111 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
 - `function_module_name` (string, required) - Function module name to validate (e.g., Z_TEST_FM)
 - `session_id` (string, optional) - Session ID from GetSession. If not provided, a new session will be created.
 - `session_state` (object, optional) - Session state from GetSession (cookies, csrf_token, cookie_store). Required if session_id is provided.
+
+---
+
+<a id="low-level-gui-status"></a>
+### Low-Level / Gui Status
+
+<a id="activateguistatuslow-low-level-gui-status"></a>
+#### ActivateGuiStatusLow (Low-Level / Gui Status)
+**Description:** [low-level] Activate an ABAP program to make GUI Status changes active.
+
+**Source:** `src/handlers/gui_status/low/handleActivateGuiStatus.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `program_name` (string, required) - Parent program name.
+- `session_id` (string, optional) - Session ID from GetSession.
+- `session_state` (object, optional) - Session state from GetSession.
+
+---
+
+<a id="createguistatuslow-low-level-gui-status"></a>
+#### CreateGuiStatusLow (Low-Level / Gui Status)
+**Description:** [low-level] Create a new ABAP GUI Status on an existing program.
+
+**Source:** `src/handlers/gui_status/low/handleCreateGuiStatus.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `description` (string, optional) - GUI Status description.
+- `program_name` (string, required) - Parent program name (e.g., Z_MY_PROGRAM).
+- `session_id` (string, optional) - Session ID from GetSession.
+- `session_state` (object, optional) - Session state from GetSession.
+- `status_name` (string, required) - GUI Status name to create (e.g., MAIN_STATUS).
+- `status_type` (string, optional) - Status type: 
+- `transport_request` (string, optional) - Transport request number.
+
+---
+
+<a id="deleteguistatuslow-low-level-gui-status"></a>
+#### DeleteGuiStatusLow (Low-Level / Gui Status)
+**Description:** [low-level] Delete an ABAP GUI Status from a program.
+
+**Source:** `src/handlers/gui_status/low/handleDeleteGuiStatus.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `lock_handle` (string, required) - Lock handle from LockGuiStatusLow.
+- `program_name` (string, required) - Parent program name.
+- `session_id` (string, optional) - Session ID from GetSession.
+- `session_state` (object, optional) - Session state from GetSession.
+- `status_name` (string, required) - GUI Status name to delete. Use 
+- `transport_request` (string, optional) - Transport request number.
+
+---
+
+<a id="lockguistatuslow-low-level-gui-status"></a>
+#### LockGuiStatusLow (Low-Level / Gui Status)
+**Description:** [low-level] Lock a program for GUI Status modification. Returns lock handle for subsequent update/unlock operations.
+
+**Source:** `src/handlers/gui_status/low/handleLockGuiStatus.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `program_name` (string, required) - Parent program name (e.g., SAPMV45A).
+- `session_id` (string, optional) - Session ID from GetSession.
+- `session_state` (object, optional) - Session state from GetSession.
+- `status_name` (string, optional) - GUI Status name (for reference only).
+
+---
+
+<a id="unlockguistatuslow-low-level-gui-status"></a>
+#### UnlockGuiStatusLow (Low-Level / Gui Status)
+**Description:** [low-level] Unlock a program after GUI Status modification. Requires lock handle from LockGuiStatusLow.
+
+**Source:** `src/handlers/gui_status/low/handleUnlockGuiStatus.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `lock_handle` (string, required) - Lock handle from LockGuiStatusLow.
+- `program_name` (string, required) - Parent program name.
+- `session_id` (string, optional) - Session ID from GetSession.
+- `session_state` (object, optional) - Session state from GetSession.
+
+---
+
+<a id="updateguistatuslow-low-level-gui-status"></a>
+#### UpdateGuiStatusLow (Low-Level / Gui Status)
+**Description:** [low-level] Update an ABAP GUI Status definition. Provide full CUA data (from ReadGuiStatus) with modifications.
+
+**Source:** `src/handlers/gui_status/low/handleUpdateGuiStatus.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `cua_data` (string, required) - Complete CUA data as JSON string (from ReadGuiStatus/GetGuiStatus). Modify and pass back.
+- `lock_handle` (string, required) - Lock handle from LockGuiStatusLow.
+- `program_name` (string, required) - Parent program name.
+- `session_id` (string, optional) - Session ID from GetSession.
+- `session_state` (object, optional) - Session state from GetSession.
+- `transport_request` (string, optional) - Transport request number.
 
 ---
 
@@ -1912,6 +2550,7 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
 - `program_type` (string, optional) - Program type: 
 - `session_id` (string, optional) - Session ID from GetSession. If not provided, a new session will be created.
 - `session_state` (object, optional) - Session state from GetSession (cookies, csrf_token, cookie_store). Required if session_id is provided.
+- `skip_check` (boolean, optional) - Skip the post-create syntax check on the newly created program shell. Default: false. Set to true when chaining multiple low-level calls where the caller will run CheckProgramLow explicitly later.
 - `transport_request` (string, optional) - Transport request number (e.g., E19K905635). Required for transportable packages.
 
 ---
@@ -1974,6 +2613,7 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
 - `program_name` (string, required) - Program name (e.g., Z_TEST_PROGRAM). Program must already exist.
 - `session_id` (string, optional) - Session ID from GetSession. If not provided, a new session will be created.
 - `session_state` (object, optional) - Session state from GetSession (cookies, csrf_token, cookie_store). Required if session_id is provided.
+- `skip_check` (boolean, optional) - Skip the pre-write syntax check of the new source. Default: false. Set to true when chaining multiple low-level calls where the caller will run CheckProgramLow explicitly before this update.
 - `source_code` (string, required) - Complete ABAP program source code.
 
 ---
@@ -1992,6 +2632,111 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
 - `program_name` (string, required) - Program name to validate (e.g., Z_MY_PROGRAM).
 - `session_id` (string, optional) - Session ID from GetSession. If not provided, a new session will be created.
 - `session_state` (object, optional) - Session state from GetSession (cookies, csrf_token, cookie_store). Required if session_id is provided.
+
+---
+
+<a id="low-level-screen"></a>
+### Low-Level / Screen
+
+<a id="activatescreenlow-low-level-screen"></a>
+#### ActivateScreenLow (Low-Level / Screen)
+**Description:** [low-level] Activate an ABAP program to make Screen changes active.
+
+**Source:** `src/handlers/screen/low/handleActivateScreen.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `program_name` (string, required) - Parent program name.
+- `session_id` (string, optional) - Session ID from GetSession.
+- `session_state` (object, optional) - Session state from GetSession.
+
+---
+
+<a id="createscreenlow-low-level-screen"></a>
+#### CreateScreenLow (Low-Level / Screen)
+**Description:** [low-level] Create a new ABAP Screen (Dynpro) on an existing program.
+
+**Source:** `src/handlers/screen/low/handleCreateScreen.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `description` (string, optional) - Screen description.
+- `dynpro_data` (string, optional) - Full screen definition as JSON (header, containers, fields_to_containers, flow_logic). If omitted, creates a minimal empty screen.
+- `program_name` (string, required) - Parent program name.
+- `screen_number` (string, required) - Screen number to create (e.g., 0100).
+- `session_id` (string, optional) - Session ID from GetSession.
+- `session_state` (object, optional) - Session state from GetSession.
+- `skip_check` (boolean, optional) - Skip post-write syntax check. Default: false. When false, runs a program-tree syntax check on the parent program after DYNPRO_INSERT and surfaces any flow-logic errors with line numbers.
+
+---
+
+<a id="deletescreenlow-low-level-screen"></a>
+#### DeleteScreenLow (Low-Level / Screen)
+**Description:** [low-level] Delete an ABAP Screen (Dynpro) from a program.
+
+**Source:** `src/handlers/screen/low/handleDeleteScreen.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `lock_handle` (string, required) - Lock handle from LockScreenLow.
+- `program_name` (string, required) - Parent program name.
+- `screen_number` (string, required) - Screen number (e.g., 0100).
+- `session_id` (string, optional) - Session ID from GetSession.
+- `session_state` (object, optional) - Session state from GetSession.
+
+---
+
+<a id="lockscreenlow-low-level-screen"></a>
+#### LockScreenLow (Low-Level / Screen)
+**Description:** [low-level] Lock a program for Screen modification. Returns lock handle for subsequent operations.
+
+**Source:** `src/handlers/screen/low/handleLockScreen.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `program_name` (string, required) - Parent program name.
+- `screen_number` (string, optional) - Screen number (for reference).
+- `session_id` (string, optional) - Session ID from GetSession.
+- `session_state` (object, optional) - Session state from GetSession.
+
+---
+
+<a id="unlockscreenlow-low-level-screen"></a>
+#### UnlockScreenLow (Low-Level / Screen)
+**Description:** [low-level] Unlock a program after Screen modification.
+
+**Source:** `src/handlers/screen/low/handleUnlockScreen.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `lock_handle` (string, required) - Lock handle from LockScreenLow.
+- `program_name` (string, required) - Parent program name.
+- `session_id` (string, optional) - Session ID from GetSession.
+- `session_state` (object, optional) - Session state from GetSession.
+
+---
+
+<a id="updatescreenlow-low-level-screen"></a>
+#### UpdateScreenLow (Low-Level / Screen)
+**Description:** [low-level] Update an ABAP Screen (Dynpro) definition. Provide full screen data as JSON.
+
+**Source:** `src/handlers/screen/low/handleUpdateScreen.ts`
+
+**Available in:** `onprem`, `legacy`
+
+**Parameters:**
+- `dynpro_data` (string, required) - Complete screen definition as JSON (header, containers, fields_to_containers, flow_logic).
+- `lock_handle` (string, required) - Lock handle from LockScreenLow.
+- `program_name` (string, required) - Parent program name.
+- `screen_number` (string, required) - Screen number (e.g., 0100).
+- `session_id` (string, optional) - Session ID from GetSession.
+- `session_state` (object, optional) - Session state from GetSession.
+- `skip_check` (boolean, optional) - Skip post-write syntax check. Default: false. When false, runs a program-tree syntax check on the parent program after DYNPRO_INSERT and surfaces any flow-logic errors with line numbers.
 
 ---
 
@@ -2044,6 +2789,7 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
 - `package_name` (string, required) - Package name (e.g., ZOK_LOCAL, $TMP for local objects).
 - `session_id` (string, optional) - Session ID from GetSession. If not provided, a new session will be created.
 - `session_state` (object, optional) - Session state from GetSession (cookies, csrf_token, cookie_store). Required if session_id is provided.
+- `skip_check` (boolean, optional) - Skip post-create syntax check. Default: false. When false, runs a syntax check on the freshly created view shell and surfaces any errors with line numbers.
 - `transport_request` (string, optional) - Transport request number (e.g., E19K905635). Required for transportable packages.
 - `view_name` (string, required) - View name (e.g., Z_TEST_PROGRAM). Must follow SAP naming conventions.
 - `view_type` (string, optional) - View type: 
@@ -2108,6 +2854,7 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
 - `lock_handle` (string, required) - Lock handle from LockObject. Required for update operation.
 - `session_id` (string, optional) - Session ID from GetSession. If not provided, a new session will be created.
 - `session_state` (object, optional) - Session state from GetSession (cookies, csrf_token, cookie_store). Required if session_id is provided.
+- `skip_check` (boolean, optional) - Skip pre-write syntax check on ddl_source. Default: false. When false, runs a syntax check on the proposed code BEFORE uploading it and surfaces any errors with line numbers — the broken source never lands on SAP.
 - `view_name` (string, required) - View name (e.g., ZOK_R_TEST_0002). View must already exist.
 
 ---
@@ -2129,4 +2876,4 @@ Legacy systems support a subset of tools — primarily Class, Interface, View, P
 
 ---
 
-*Last updated: 2026-03-14*
+*Last updated: 2026-08-16*

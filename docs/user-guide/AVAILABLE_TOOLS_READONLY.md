@@ -3,7 +3,7 @@
 Generated from code in `src/handlers/**` (not from docs).
 
 - Level: Read-Only
-- Total tools: 52
+- Total tools: 64
 
 ## Navigation
 
@@ -14,11 +14,16 @@ Generated from code in `src/handlers/**` (not from docs).
     - [ReadBehaviorImplementation](#readbehaviorimplementation-read-only-behavior-implementation)
   - [Class](#read-only-class)
     - [ReadClass](#readclass-read-only-class)
+  - [Customizing](#read-only-customizing)
+    - [CustomizingDescribe](#customizingdescribe-read-only-customizing)
+    - [CustomizingRead](#customizingread-read-only-customizing)
+    - [ImgSearch](#imgsearch-read-only-customizing)
   - [Data Element](#read-only-data-element)
     - [ReadDataElement](#readdataelement-read-only-data-element)
   - [Domain](#read-only-domain)
     - [ReadDomain](#readdomain-read-only-domain)
   - [Enhancement](#read-only-enhancement)
+    - [GetBadiImplementations](#getbadiimplementations-read-only-enhancement)
     - [GetEnhancementImpl](#getenhancementimpl-read-only-enhancement)
     - [GetEnhancements](#getenhancements-read-only-enhancement)
     - [GetEnhancementSpot](#getenhancementspot-read-only-enhancement)
@@ -26,6 +31,9 @@ Generated from code in `src/handlers/**` (not from docs).
     - [ReadFunctionGroup](#readfunctiongroup-read-only-function-group)
   - [Function Module](#read-only-function-module)
     - [ReadFunctionModule](#readfunctionmodule-read-only-function-module)
+  - [Gui Status](#read-only-gui-status)
+    - [GetGuiStatusList](#getguistatuslist-read-only-gui-status)
+    - [ReadGuiStatus](#readguistatus-read-only-gui-status)
   - [Include](#read-only-include)
     - [GetInclude](#getinclude-read-only-include)
     - [GetIncludesList](#getincludeslist-read-only-include)
@@ -39,6 +47,9 @@ Generated from code in `src/handlers/**` (not from docs).
   - [Program](#read-only-program)
     - [GetProgFullCode](#getprogfullcode-read-only-program)
     - [ReadProgram](#readprogram-read-only-program)
+  - [Screen](#read-only-screen)
+    - [GetScreensList](#getscreenslist-read-only-screen)
+    - [ReadScreen](#readscreen-read-only-screen)
   - [Search](#read-only-search)
     - [GetObjectsByType](#getobjectsbytype-read-only-search)
     - [GetObjectsList](#getobjectslist-read-only-search)
@@ -64,13 +75,17 @@ Generated from code in `src/handlers/**` (not from docs).
     - [GetTransaction](#gettransaction-read-only-system)
     - [GetTypeInfo](#gettypeinfo-read-only-system)
     - [GetWhereUsed](#getwhereused-read-only-system)
+    - [ReloadProfile](#reloadprofile-read-only-system)
     - [RuntimeAnalyzeDump](#runtimeanalyzedump-read-only-system)
     - [RuntimeAnalyzeProfilerTrace](#runtimeanalyzeprofilertrace-read-only-system)
     - [RuntimeCreateProfilerTraceParameters](#runtimecreateprofilertraceparameters-read-only-system)
     - [RuntimeGetDumpById](#runtimegetdumpbyid-read-only-system)
+    - [RuntimeGetGatewayErrorLog](#runtimegetgatewayerrorlog-read-only-system)
     - [RuntimeGetProfilerTraceData](#runtimegetprofilertracedata-read-only-system)
     - [RuntimeListDumps](#runtimelistdumps-read-only-system)
+    - [RuntimeListFeeds](#runtimelistfeeds-read-only-system)
     - [RuntimeListProfilerTraceFiles](#runtimelistprofilertracefiles-read-only-system)
+    - [RuntimeListSystemMessages](#runtimelistsystemmessages-read-only-system)
     - [RuntimeRunClassWithProfiling](#runtimerunclasswithprofiling-read-only-system)
     - [RuntimeRunProgramWithProfiling](#runtimerunprogramwithprofiling-read-only-system)
   - [Table](#read-only-table)
@@ -132,6 +147,50 @@ Generated from code in `src/handlers/**` (not from docs).
 
 ---
 
+<a id="read-only-customizing"></a>
+### Read-Only / Customizing
+
+<a id="customizingdescribe-read-only-customizing"></a>
+#### CustomizingDescribe (Read-Only / Customizing)
+**Description:** [customizing] Describe a customizing object (maintenance view or config table): full table set (base + text), key fields, auth group, IMG activity, delivery class and the R3TR transport object (VDAT/TABU/CDAT).
+
+**Source:** `src/handlers/customizing/readonly/handleCustomizingDescribe.ts`
+
+**Parameters:**
+- `language` (string, optional (default: E)) - Description language (default E).
+- `object_name` (string, required) - Maintenance view name (TVDIR) or base table name (DD02L), e.g. V_T001 or T001.
+
+---
+
+<a id="customizingread-read-only-customizing"></a>
+#### CustomizingRead (Read-Only / Customizing)
+**Description:** [customizing] Read current customizing data for a config object (maintenance view or table), optionally filtered by an org-unit key field value.
+
+**Source:** `src/handlers/customizing/readonly/handleCustomizingRead.ts`
+
+**Parameters:**
+- `key_field` (string, optional) - Key field to filter on (e.g. BUKRS, WERKS, VKORG). Omit to read the first rows.
+- `key_value` (string, optional) - Key field value to filter on (e.g. 
+- `max_rows` (number, optional (default: 100)) - Maximum rows (default 100).
+- `object_name` (string, required) - Maintenance view or base table, e.g. V_T001 / T001 / V_T001W.
+
+---
+
+<a id="imgsearch-read-only-customizing"></a>
+#### ImgSearch (Read-Only / Customizing)
+**Description:** [customizing] Search SAP IMG/SPRO activities by keyword (activity title). Prefers the STREE search-text index when the customizing engine is deployed; falls back to the raw CUS_IMGACT tables. Pass a namespace (e.g. 
+
+**Source:** `src/handlers/customizing/readonly/handleImgSearch.ts`
+
+**Parameters:**
+- `in_scope_only` (boolean, optional (default: false)) - Keep only activities in the client
+- `keyword` (string, required) - Keyword to match against IMG activity titles.
+- `language` (string, optional (default: E)) - IMG language (default E).
+- `max_results` (number, optional (default: 200)) - Maximum hits (default 200).
+- `namespace` (string, optional) - Activity-ID prefix to scope the raw search by, e.g. 
+
+---
+
 <a id="read-only-data-element"></a>
 ### Read-Only / Data Element
 
@@ -164,6 +223,20 @@ Generated from code in `src/handlers/**` (not from docs).
 
 <a id="read-only-enhancement"></a>
 ### Read-Only / Enhancement
+
+<a id="getbadiimplementations-read-only-enhancement"></a>
+#### GetBadiImplementations (Read-Only / Enhancement)
+**Description:** [read-only] Find implementations of a (classic) BAdI definition. Use during symptom analysis when a standard SAP BAdI is implicated — answers 
+
+**Source:** `src/handlers/enhancement/readonly/handleGetBadiImplementations.ts`
+
+**Parameters:**
+- `active_only` (boolean, optional (default: true)) - Restrict to active implementations only. Default: true.
+- `badi_definition` (string, required) - BAdI definition name (e.g., ME_PROCESS_PO_CUST). Will be uppercased.
+- `customer_only` (boolean, optional (default: true)) - Restrict to Z*/Y* implementations. Default: true. Set false to include SAP-shipped implementations.
+- `include_methods` (boolean, optional (default: true)) - Include the list of redefined method names per implementation (from SXC_EXIT). Default: true.
+
+---
 
 <a id="getenhancementimpl-read-only-enhancement"></a>
 #### GetEnhancementImpl (Read-Only / Enhancement)
@@ -228,6 +301,31 @@ Generated from code in `src/handlers/**` (not from docs).
 - `function_group_name` (string, required) - Function group name containing the function module (e.g., Z_MY_FG).
 - `function_module_name` (string, required) - Function module name (e.g., Z_MY_FM).
 - `version` (string, optional (default: active)) - Version to read: 
+
+---
+
+<a id="read-only-gui-status"></a>
+### Read-Only / Gui Status
+
+<a id="getguistatuslist-read-only-gui-status"></a>
+#### GetGuiStatusList (Read-Only / Gui Status)
+**Description:** [read-only] List all GUI statuses belonging to an ABAP program.
+
+**Source:** `src/handlers/gui_status/readonly/handleGetGuiStatusList.ts`
+
+**Parameters:**
+- `program_name` (string, required) - Program name (e.g., SAPMV45A).
+
+---
+
+<a id="readguistatus-read-only-gui-status"></a>
+#### ReadGuiStatus (Read-Only / Gui Status)
+**Description:** [read-only] Read ABAP GUI Status definition (statuses, function codes, menus, toolbars, titles) for a program.
+
+**Source:** `src/handlers/gui_status/readonly/handleReadGuiStatus.ts`
+
+**Parameters:**
+- `program_name` (string, required) - Parent program name (e.g., SAPMV45A).
 
 ---
 
@@ -342,12 +440,38 @@ Generated from code in `src/handlers/**` (not from docs).
 
 ---
 
+<a id="read-only-screen"></a>
+### Read-Only / Screen
+
+<a id="getscreenslist-read-only-screen"></a>
+#### GetScreensList (Read-Only / Screen)
+**Description:** [read-only] List all screens (dynpros) belonging to an ABAP program.
+
+**Source:** `src/handlers/screen/readonly/handleGetScreensList.ts`
+
+**Parameters:**
+- `program_name` (string, required) - Program name (e.g., SAPMV45A).
+
+---
+
+<a id="readscreen-read-only-screen"></a>
+#### ReadScreen (Read-Only / Screen)
+**Description:** [read-only] Read ABAP Screen (Dynpro) flow logic source code, fields, and metadata.
+
+**Source:** `src/handlers/screen/readonly/handleReadScreen.ts`
+
+**Parameters:**
+- `program_name` (string, required) - Parent program name (e.g., SAPMV45A).
+- `screen_number` (string, required) - Screen number (e.g., 0100).
+
+---
+
 <a id="read-only-search"></a>
 ### Read-Only / Search
 
 <a id="getobjectsbytype-read-only-search"></a>
 #### GetObjectsByType (Read-Only / Search)
-**Description:** [read-only] Retrieves all ABAP objects of a specific type under a given node.
+**Description:** [read-only] Retrieves all ABAP objects of a specific type (classes, tables, programs, interfaces, etc.) under a given parent node. Useful for listing all objects of one type within a package or composite object.
 
 **Source:** `src/handlers/search/readonly/handleGetObjectsByType.ts`
 
@@ -363,7 +487,7 @@ Generated from code in `src/handlers/**` (not from docs).
 
 <a id="getobjectslist-read-only-search"></a>
 #### GetObjectsList (Read-Only / Search)
-**Description:** [read-only] Recursively retrieves all valid ABAP repository objects for a given parent (program, function group, etc.) including nested includes.
+**Description:** [read-only] Recursively retrieves all child ABAP repository objects for a given parent — programs (PROG), function groups (FUGR), classes (CLAS), packages (DEVC), and other composite objects — including nested includes and subcomponents.
 
 **Source:** `src/handlers/search/readonly/handleGetObjectsList.ts`
 
@@ -377,7 +501,7 @@ Generated from code in `src/handlers/**` (not from docs).
 
 <a id="searchobject-read-only-search"></a>
 #### SearchObject (Read-Only / Search)
-**Description:** [read-only] Search for ABAP objects by name pattern. Parameters: object_name (with or without mask), object_type (optional), maxResults (optional). If object_type is specified, results are filtered by type.
+**Description:** [read-only] Find, search, locate, or check if an ABAP repository object exists by name or wildcard pattern (e.g. 
 
 **Source:** `src/handlers/search/readonly/handleSearchObject.ts`
 
@@ -484,7 +608,7 @@ Generated from code in `src/handlers/**` (not from docs).
 
 <a id="getadttypes-read-only-system"></a>
 #### GetAdtTypes (Read-Only / System)
-**Description:** [read-only] Retrieve all valid ADT object types.
+**Description:** [read-only] Retrieve all valid ADT object types (CLAS, TABL, PROG, DEVC, FUGR, INTF, DDLS, DTEL, DOMA, SRVD, SRVB, BDEF, DDLX, etc.) or validate a specific type name.
 
 **Source:** `src/handlers/system/readonly/handleGetAllTypes.ts`
 
@@ -495,7 +619,7 @@ Generated from code in `src/handlers/**` (not from docs).
 
 <a id="getinactiveobjects-read-only-system"></a>
 #### GetInactiveObjects (Read-Only / System)
-**Description:** [read-only] Get a list of inactive ABAP objects (objects that have been modified but not activated).
+**Description:** [read-only] Get a list of inactive ABAP objects — modified but not yet activated, pending activation. Shows classes, tables, CDS views, and other objects awaiting activation.
 
 **Source:** `src/handlers/system/readonly/handleGetInactiveObjects.ts`
 
@@ -506,7 +630,7 @@ Generated from code in `src/handlers/**` (not from docs).
 
 <a id="getobjectinfo-read-only-system"></a>
 #### GetObjectInfo (Read-Only / System)
-**Description:** [read-only] Return ABAP object tree: root, group nodes, and terminal leaves up to maxDepth. Enrich each node via SearchObject if enrich=true. Group nodes are included for hierarchy. Each node has node_type: root, point, end.
+**Description:** [read-only] Return ABAP object tree structure for packages (DEVC), classes (CLAS), programs (PROG), function groups (FUGR), and other objects. Shows root, group nodes, and terminal leaves up to maxDepth. Enrich each node with description and package via SearchObject if enrich=true.
 
 **Source:** `src/handlers/system/readonly/handleGetObjectInfo.ts`
 
@@ -556,11 +680,12 @@ Generated from code in `src/handlers/**` (not from docs).
 
 <a id="getsqlquery-read-only-system"></a>
 #### GetSqlQuery (Read-Only / System)
-**Description:** [read-only] Execute freestyle SQL queries via SAP ADT Data Preview API.
+**Description:** [read-only] Execute ABAP SQL SELECT queries on database tables and CDS views via SAP ADT Data Preview API. Use for ad-hoc data retrieval, row counts, and filtered queries.
 
 **Source:** `src/handlers/system/readonly/handleGetSqlQuery.ts`
 
 **Parameters:**
+- `acknowledge_risk` (boolean, optional (default: false)) - Set to true ONLY after the user has explicitly authorized row extraction from an 
 - `row_number` (number, optional (default: 100)) - [read-only] Maximum number of rows to return
 - `sql_query` (string, required) - SQL query to execute
 
@@ -568,7 +693,7 @@ Generated from code in `src/handlers/**` (not from docs).
 
 <a id="gettransaction-read-only-system"></a>
 #### GetTransaction (Read-Only / System)
-**Description:** [read-only] Retrieve ABAP transaction details.
+**Description:** [read-only] Retrieve ABAP transaction (t-code) details — program, screen, authorization object, and transaction type (dialog, report, OO).
 
 **Source:** `src/handlers/system/readonly/handleGetTransaction.ts`
 
@@ -579,7 +704,7 @@ Generated from code in `src/handlers/**` (not from docs).
 
 <a id="gettypeinfo-read-only-system"></a>
 #### GetTypeInfo (Read-Only / System)
-**Description:** [read-only] Retrieve ABAP type information.
+**Description:** [read-only] Retrieve ABAP type information for domains (DOMA), data elements (DTEL), table types, and structures. Returns field definitions, value ranges, fixed values, and DDIC metadata.
 
 **Source:** `src/handlers/system/readonly/handleGetTypeInfo.ts`
 
@@ -591,7 +716,7 @@ Generated from code in `src/handlers/**` (not from docs).
 
 <a id="getwhereused-read-only-system"></a>
 #### GetWhereUsed (Read-Only / System)
-**Description:** [read-only] Retrieve where-used references for ABAP objects via ADT usageReferences. Returns parsed list of referencing objects with their types and packages.
+**Description:** [read-only] Find where-used references (cross-references, usages, dependencies) for ABAP objects — classes, interfaces, tables, data elements, programs, function modules, etc. Returns list of all referencing objects with their types and packages.
 
 **Source:** `src/handlers/system/readonly/handleGetWhereUsed.ts`
 
@@ -599,6 +724,17 @@ Generated from code in `src/handlers/**` (not from docs).
 - `enable_all_types` (boolean, optional (default: false)) - If true, searches in all available object types (Eclipse 
 - `object_name` (string, required) - Name of the ABAP object
 - `object_type` (string, required) - Type of the ABAP object (class, interface, program, table, etc.)
+
+---
+
+<a id="reloadprofile-read-only-system"></a>
+#### ReloadProfile (Read-Only / System)
+**Description:** [system] Reload the active SAP profile from .sc4sap/active-profile.txt and reset the cached connection. Called by the sc4sap plugin after switching profiles. Returns the newly active alias, host, tier, and readonly status.
+
+**Source:** `src/handlers/system/readonly/handleReloadProfile.ts`
+
+**Parameters:**
+- None
 
 ---
 
@@ -655,13 +791,29 @@ Generated from code in `src/handlers/**` (not from docs).
 
 <a id="runtimegetdumpbyid-read-only-system"></a>
 #### RuntimeGetDumpById (Read-Only / System)
-**Description:** [runtime] Read a specific ABAP runtime dump by dump ID. Returns parsed JSON payload.
+**Description:** [runtime] Read a specific ABAP runtime dump by dump ID. Returns parsed JSON payload. Use response_mode=
 
 **Source:** `src/handlers/system/readonly/handleRuntimeGetDumpById.ts`
 
 **Parameters:**
 - `dump_id` (string, required) - Runtime dump ID (for example: 694AB694097211F1929806D06D234D38).
+- `response_mode` (string, optional (default: payload)) - Controls what is returned: 
 - `view` (string, optional (default: default)) - Dump view mode: default payload, summary section, or formatted long text.
+
+---
+
+<a id="runtimegetgatewayerrorlog-read-only-system"></a>
+#### RuntimeGetGatewayErrorLog (Read-Only / System)
+**Description:** [runtime] List SAP Gateway error log (/IWFND/ERROR_LOG) or get error detail. Returns structured entries with type, shortText, transactionId, dateTime, username. With error_url returns full detail including serviceInfo, errorContext, sourceCode, callStack.
+
+**Source:** `src/handlers/system/readonly/handleRuntimeGetGatewayErrorLog.ts`
+
+**Parameters:**
+- `error_url` (string, optional) - Feed URL of a specific error entry (from a previous list response link field). When provided, returns detailed error info instead of listing.
+- `from` (string, optional) - Start of time range in YYYYMMDDHHMMSS format.
+- `max_results` (number, optional) - Maximum number of errors to return.
+- `to` (string, optional) - End of time range in YYYYMMDDHHMMSS format.
+- `user` (string, optional) - Filter errors by SAP username.
 
 ---
 
@@ -696,6 +848,21 @@ Generated from code in `src/handlers/**` (not from docs).
 
 ---
 
+<a id="runtimelistfeeds-read-only-system"></a>
+#### RuntimeListFeeds (Read-Only / System)
+**Description:** [runtime] List available ADT runtime feeds or read a specific feed type. Feed types: dumps, system_messages, gateway_errors. Without feed_type returns available feed descriptors.
+
+**Source:** `src/handlers/system/readonly/handleRuntimeListFeeds.ts`
+
+**Parameters:**
+- `feed_type` (string, optional (default: descriptors)) - Feed to read. 
+- `from` (string, optional) - Start of time range in YYYYMMDDHHMMSS format.
+- `max_results` (number, optional) - Maximum number of entries to return.
+- `to` (string, optional) - End of time range in YYYYMMDDHHMMSS format.
+- `user` (string, optional) - Filter feed entries by SAP username.
+
+---
+
 <a id="runtimelistprofilertracefiles-read-only-system"></a>
 #### RuntimeListProfilerTraceFiles (Read-Only / System)
 **Description:** [runtime] List ABAP profiler trace files available in ADT runtime. Returns parsed JSON payload.
@@ -704,6 +871,20 @@ Generated from code in `src/handlers/**` (not from docs).
 
 **Parameters:**
 - None
+
+---
+
+<a id="runtimelistsystemmessages-read-only-system"></a>
+#### RuntimeListSystemMessages (Read-Only / System)
+**Description:** [runtime] List SM02 system messages. Returns structured entries with id, title, text, severity, validity period, and author.
+
+**Source:** `src/handlers/system/readonly/handleRuntimeListSystemMessages.ts`
+
+**Parameters:**
+- `from` (string, optional) - Start of time range in YYYYMMDDHHMMSS format.
+- `max_results` (number, optional) - Maximum number of messages to return.
+- `to` (string, optional) - End of time range in YYYYMMDDHHMMSS format.
+- `user` (string, optional) - Filter by author username.
 
 ---
 
@@ -762,7 +943,7 @@ Generated from code in `src/handlers/**` (not from docs).
 
 <a id="gettablecontents-read-only-table"></a>
 #### GetTableContents (Read-Only / Table)
-**Description:** [read-only] Retrieve contents of an ABAP table.
+**Description:** [read-only] Retrieve contents (data preview) of an ABAP database table or CDS view. Returns rows of data like SE16/SE16N.
 
 **Source:** `src/handlers/table/readonly/handleGetTableContents.ts`
 
@@ -795,6 +976,7 @@ Generated from code in `src/handlers/**` (not from docs).
 **Parameters:**
 - `include_objects` (boolean, optional (default: true))) - Include list of objects in transport (default: true)
 - `include_tasks` (boolean, optional (default: true))) - Include list of tasks in transport (default: true)
+- `owner` (string, optional) - SAP user who owns the transport. On ECC the session-user-scoped path endpoint silently filters out other users
 - `transport_number` (string, required) - Transport request number (e.g., E19K905635, DEVK905123)
 
 ---
@@ -826,4 +1008,4 @@ Generated from code in `src/handlers/**` (not from docs).
 
 ---
 
-*Last updated: 2026-03-14*
+*Last updated: 2026-08-16*
