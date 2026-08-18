@@ -118,6 +118,10 @@ import {
   handleRuntimeRunProgramWithProfiling,
   TOOL_DEFINITION as RuntimeRunProgramWithProfiling_Tool,
 } from '../../../handlers/system/readonly/handleRuntimeRunProgramWithProfiling';
+import {
+  handleListTransportTargets,
+  TOOL_DEFINITION as ListTransportTargets_Tool,
+} from '../../../handlers/transport/readonly/handleListTransportTargets';
 import { BaseHandlerGroup } from '../base/BaseHandlerGroup.js';
 import type { HandlerEntry } from '../interfaces.js';
 
@@ -332,6 +336,10 @@ export class SystemHandlersGroup extends BaseHandlerGroup {
             },
           );
         },
+      },
+      {
+        toolDefinition: ListTransportTargets_Tool,
+        handler: () => handleListTransportTargets(this.context),
       },
     ];
   }

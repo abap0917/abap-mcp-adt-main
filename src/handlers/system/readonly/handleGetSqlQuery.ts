@@ -1,4 +1,5 @@
 import type { ILogger } from '@babamba2/mcp-abap-adt-interfaces';
+import { toErrorMessage } from '../../../lib/adtError';
 import { createAdtClient } from '../../../lib/clients';
 import type { HandlerContext } from '../../../lib/handlers/interfaces';
 import {
@@ -265,15 +266,25 @@ export async function handleGetSqlQuery(context: HandlerContext, args: any) {
         `Failed to execute SQL query. Status: ${response.status}`,
       );
     }
-  } catch (error) {
+  } catch (error: any) {
     logger?.error('Failed to execute SQL query', error as any);
+    const status = error?.response?.status ?? error?.status;
+    const structured = toErrorMessage(error);
+    const hint =
+      status === 400
+        ? '\n\nData Preview rejected this query. Common causes: unsupported syntax ' +
+          '(LIKE / OR-with-parentheses / CAST), or a field type the preview cannot ' +
+          'serialize (e.g. SSTRING / STRING columns). Try: simpler SELECT with fewer ' +
+          'columns, avoid string columns, or read the table with GetTableContents / ' +
+          'CustomizingRead instead.'
+        : '';
     // MCP-compliant error response: always return content[] with type "text"
     return {
       isError: true,
       content: [
         {
           type: 'text',
-          text: `ADT error: ${String(error)}`,
+          text: `SQL query failed: ${structured}${hint}`,
         },
       ],
     };
