@@ -6,7 +6,7 @@
  * and are read at call time — an ABAP-only change needs no rebuild, just a
  * re-run of CustomizingEngineBootstrap.
  */
-export declare const ENGINE_VERSION = "0.9.21";
+export declare const ENGINE_VERSION = "0.9.23";
 export declare const ENGINE_CLASS_NAME = "ZCL_MCP_CUST_ENGINE";
 export declare const ENGINE_CLASS_URL: string;
 /** Default SICF path the cust-engine handler is expected to be registered under. */

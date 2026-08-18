@@ -37,6 +37,7 @@ const handleRuntimeListProfilerTraceFiles_1 = require("../../../handlers/system/
 const handleRuntimeListSystemMessages_1 = require("../../../handlers/system/readonly/handleRuntimeListSystemMessages");
 const handleRuntimeRunClassWithProfiling_1 = require("../../../handlers/system/readonly/handleRuntimeRunClassWithProfiling");
 const handleRuntimeRunProgramWithProfiling_1 = require("../../../handlers/system/readonly/handleRuntimeRunProgramWithProfiling");
+const handleListTransportTargets_1 = require("../../../handlers/transport/readonly/handleListTransportTargets");
 const BaseHandlerGroup_js_1 = require("../base/BaseHandlerGroup.js");
 /**
  * Handler group for all system-related handlers
@@ -196,6 +197,10 @@ class SystemHandlersGroup extends BaseHandlerGroup_js_1.BaseHandlerGroup {
                 handler: (args) => {
                     return (0, handleGetPackageTree_1.handleGetPackageTree)(this.context, args);
                 },
+            },
+            {
+                toolDefinition: handleListTransportTargets_1.TOOL_DEFINITION,
+                handler: () => (0, handleListTransportTargets_1.handleListTransportTargets)(this.context),
             },
         ];
     }

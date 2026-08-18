@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TOOL_DEFINITION = void 0;
 exports.parseSqlQueryXml = parseSqlQueryXml;
 exports.handleGetSqlQuery = handleGetSqlQuery;
+const adtError_1 = require("../../../lib/adtError");
 const clients_1 = require("../../../lib/clients");
 const tableBlocklist_1 = require("../../../lib/policy/tableBlocklist");
 const utils_1 = require("../../../lib/utils");
@@ -184,13 +185,22 @@ async function handleGetSqlQuery(context, args) {
     }
     catch (error) {
         logger?.error('Failed to execute SQL query', error);
+        const status = error?.response?.status ?? error?.status;
+        const structured = (0, adtError_1.toErrorMessage)(error);
+        const hint = status === 400
+            ? '\n\nData Preview rejected this query. Common causes: unsupported syntax ' +
+                '(LIKE / OR-with-parentheses / CAST), or a field type the preview cannot ' +
+                'serialize (e.g. SSTRING / STRING columns). Try: simpler SELECT with fewer ' +
+                'columns, avoid string columns, or read the table with GetTableContents / ' +
+                'CustomizingRead instead.'
+            : '';
         // MCP-compliant error response: always return content[] with type "text"
         return {
             isError: true,
             content: [
                 {
                     type: 'text',
-                    text: `ADT error: ${String(error)}`,
+                    text: `SQL query failed: ${structured}${hint}`,
                 },
             ],
         };

@@ -53,7 +53,7 @@ const path = __importStar(require("path"));
 // ---------------------------------------------------------------------------
 // Identity / version
 // ---------------------------------------------------------------------------
-exports.ENGINE_VERSION = '0.9.21';
+exports.ENGINE_VERSION = '0.9.23';
 exports.ENGINE_CLASS_NAME = 'ZCL_MCP_CUST_ENGINE';
 exports.ENGINE_CLASS_URL = `/sap/bc/adt/oo/classes/${exports.ENGINE_CLASS_NAME.toLowerCase()}`;
 /** Default SICF path the cust-engine handler is expected to be registered under. */

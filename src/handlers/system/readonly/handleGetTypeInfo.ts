@@ -9,6 +9,7 @@
  */
 
 import { XMLParser } from 'fast-xml-parser';
+import { toErrorMessage } from '../../../lib/adtError';
 import { objectsListCache } from '../../../lib/getObjectsListCache';
 import type { HandlerContext } from '../../../lib/handlers/interfaces';
 import {
@@ -181,7 +182,7 @@ export async function handleGetTypeInfo(context: HandlerContext, args: any) {
       content: [
         {
           type: 'text',
-          text: `ADT error: ${String(error)}`,
+          text: `Type info lookup failed: ${toErrorMessage(error)}`,
         },
       ],
     };
@@ -272,7 +273,7 @@ export async function handleGetTypeInfo(context: HandlerContext, args: any) {
       content: [
         {
           type: 'text',
-          text: `ADT error: ${String(error)}`,
+          text: `Type info lookup failed: ${toErrorMessage(error)}`,
         },
       ],
     };

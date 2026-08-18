@@ -7,6 +7,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TOOL_DEFINITION = void 0;
 exports.handleGetWhereUsed = handleGetWhereUsed;
+const adtError_1 = require("../../../lib/adtError");
 const clients_1 = require("../../../lib/clients");
 const getObjectsListCache_1 = require("../../../lib/getObjectsListCache");
 const utils_1 = require("../../../lib/utils");
@@ -95,7 +96,7 @@ async function handleGetWhereUsed(context, args) {
             content: [
                 {
                     type: 'text',
-                    text: `ADT error: ${String(error)}`,
+                    text: `Where-used lookup failed: ${(0, adtError_1.toErrorMessage)(error)}`,
                 },
             ],
         };

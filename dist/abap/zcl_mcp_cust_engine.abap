@@ -35,6 +35,8 @@ CLASS zcl_mcp_cust_engine DEFINITION
              values_json      TYPE string,     " write: JSON array of {FIELD,VALUE} overrides applied to every planned row
              rows_json        TYPE string,     " create: JSON array of rows, each row a JSON array of {FIELD,VALUE} (full key + data)
              items_json       TYPE string,     " listing: JSON array of {PRODUCT,ASSORTMENT,DATE_FROM,DATE_TO} listing items
+              program          TYPE string,     " run_report: ABAP report to execute and capture LIST output
+              rspar_json       TYPE string,     " run_report: RSPARAMS JSON for selection-screen values
            END OF ty_request.
 
     " Field override for handle_write: applied to each planned row after the
@@ -184,6 +186,13 @@ CLASS zcl_mcp_cust_engine DEFINITION
     "! customizing, via SAP's standard entity copier — the same engine behind
     "! EC01/EC02/EC04 — executed without dialog (ECOP_ORG_UNITS_IN_THE_DARK).
     METHODS handle_org_copy
+      IMPORTING is_req         TYPE ty_request
+      RETURNING VALUE(rs_resp) TYPE ty_response.
+
+    "! Run an executable report and return its LIST output (SUBMIT ... EXPORTING
+    "! LIST TO MEMORY + LIST_FROM_MEMORY). Selection-screen values may be passed
+    "! as RSPARAMS JSON in RSPAR_JSON.
+    METHODS handle_run_report
       IMPORTING is_req         TYPE ty_request
       RETURNING VALUE(rs_resp) TYPE ty_response.
 
@@ -356,6 +365,7 @@ CLASS zcl_mcp_cust_engine IMPLEMENTATION.
             WHEN 'hana_memory'.    ls_resp = handle_hana_memory( ).
             WHEN 'abap_memory'.    ls_resp = handle_abap_memory( ).
             WHEN 'org_copy'.       ls_resp = handle_org_copy( ls_req ).
+            WHEN 'run_report'.     ls_resp = handle_run_report( ls_req ).
             WHEN OTHERS.
               ls_resp-status = 'error'.
               APPEND |Unknown operation: '{ ls_req-operation }'|
@@ -439,6 +449,95 @@ CLASS zcl_mcp_cust_engine IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD handle_run_report.
+    rs_resp-operation = 'run_report'.
+    rs_resp-version   = c_version.
+
+    TYPES: BEGIN OF ty_rspar,
+             selname TYPE c LENGTH 8,
+             kind    TYPE c LENGTH 1,
+             sign    TYPE c LENGTH 1,
+             option  TYPE c LENGTH 2,
+             low     TYPE c LENGTH 45,
+             high    TYPE c LENGTH 45,
+           END OF ty_rspar,
+           ty_rspar_tt TYPE STANDARD TABLE OF ty_rspar WITH DEFAULT KEY.
+    DATA lt_rspar   TYPE ty_rspar_tt.
+    DATA lt_list    TYPE STANDARD TABLE OF abaplist WITH DEFAULT KEY.
+    DATA lt_lines   TYPE string_table.
+    DATA lv_program TYPE c LENGTH 40.
+
+    lv_program = condense( is_req-program ).
+    IF lv_program IS INITIAL.
+      rs_resp-status = 'error'.
+      APPEND 'program is required' TO rs_resp-messages.
+      RETURN.
+    ENDIF.
+
+    " SUBMIT of a missing/inactive program dumps (500) instead of raising a
+    " catchable exception, so pre-check the repository state.
+    SELECT SINGLE progname FROM reposrc INTO @DATA(lv_found)
+      WHERE progname = @lv_program AND r3state = 'A'.
+    IF sy-subrc <> 0.
+      rs_resp-status = 'error'.
+      APPEND |Report { lv_program } not found or not active| TO rs_resp-messages.
+      RETURN.
+    ENDIF.
+
+    IF is_req-rspar_json IS NOT INITIAL.
+      /ui2/cl_json=>deserialize(
+        EXPORTING json        = is_req-rspar_json
+                  pretty_name = /ui2/cl_json=>pretty_mode-none
+        CHANGING  data        = lt_rspar ).
+    ENDIF.
+
+    TRY.
+        FREE MEMORY ID '%_LIST'.
+        IF lt_rspar IS INITIAL.
+          SUBMIT (lv_program)
+            EXPORTING LIST TO MEMORY
+            AND RETURN
+            ##SUBRC_OK.
+        ELSE.
+          SUBMIT (lv_program)
+            WITH SELECTION-TABLE lt_rspar
+            EXPORTING LIST TO MEMORY
+            AND RETURN
+            ##SUBRC_OK.
+        ENDIF.
+
+        CALL FUNCTION 'LIST_FROM_MEMORY'
+          TABLES
+            listobject = lt_list
+          EXCEPTIONS
+            not_found  = 1
+            OTHERS     = 2.
+        IF sy-subrc = 0.
+          CALL FUNCTION 'LIST_TO_ASCI'
+            IMPORTING
+              list_string_ascii = lt_lines
+            TABLES
+              listobject = lt_list
+            EXCEPTIONS
+              empty_list         = 1
+              list_index_invalid = 2
+              OTHERS             = 3.
+        ENDIF.
+        FREE MEMORY ID '%_LIST'.
+      CATCH cx_root INTO DATA(lx_run).
+        rs_resp-status = 'error'.
+        APPEND |Cannot execute report { lv_program }: { lx_run->get_text( ) }|
+          TO rs_resp-messages.
+    ENDTRY.
+
+    IF rs_resp-status IS INITIAL.
+      rs_resp-status = 'ok'.
+      /ui2/cl_json=>serialize(
+        EXPORTING data        = lt_lines
+                  pretty_name = /ui2/cl_json=>pretty_mode-none
+        RECEIVING r_json      = rs_resp-data_json ).
+    ENDIF.
+  ENDMETHOD.
   METHOD run_hana_sql.
     " Native ADBC query against HANA SYS.M_* monitoring views — these are not
     " visible to Open SQL, so we use cl_sql_statement.  Each query returns a

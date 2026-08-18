@@ -4,6 +4,7 @@
  * Uses getWhereUsedList for parsed results
  */
 
+import { toErrorMessage } from '../../../lib/adtError';
 import { createAdtClient } from '../../../lib/clients';
 import { objectsListCache } from '../../../lib/getObjectsListCache';
 import type { HandlerContext } from '../../../lib/handlers/interfaces';
@@ -117,7 +118,7 @@ export async function handleGetWhereUsed(
       content: [
         {
           type: 'text',
-          text: `ADT error: ${String(error)}`,
+          text: `Where-used lookup failed: ${toErrorMessage(error)}`,
         },
       ],
     };

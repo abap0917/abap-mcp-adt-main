@@ -12,6 +12,10 @@ import {
   handleRunAtcAnalysis,
   TOOL_DEFINITION as RunAtcAnalysis_Tool,
 } from '../../../handlers/quality/handleRunAtcAnalysis';
+import {
+  handleRunReport,
+  TOOL_DEFINITION as RunReport_Tool,
+} from '../../../handlers/quality/handleRunReport';
 import { BaseHandlerGroup } from '../base/BaseHandlerGroup.js';
 import type { HandlerEntry } from '../interfaces.js';
 
@@ -67,6 +71,10 @@ export class DebugHandlersGroup extends BaseHandlerGroup {
       {
         toolDefinition: RunAtcAnalysis_Tool,
         handler: (a: any) => handleRunAtcAnalysis(this.context, a),
+      },
+      {
+        toolDefinition: RunReport_Tool,
+        handler: (a: any) => handleRunReport(this.context, a),
       },
     ];
   }

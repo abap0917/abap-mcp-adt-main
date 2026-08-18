@@ -3,6 +3,7 @@
  */
 
 import { XMLParser } from 'fast-xml-parser';
+import { toErrorMessage } from '../../../lib/adtError';
 import { createAdtClient } from '../../../lib/clients';
 import type { HandlerContext } from '../../../lib/handlers/interfaces';
 export const TOOL_DEFINITION = {
@@ -101,7 +102,7 @@ export async function handleGetAdtTypes(context: HandlerContext, _args: any) {
       content: [
         {
           type: 'text',
-          text: `ADT error: ${String(error)}`,
+          text: `Failed to fetch ADT types: ${toErrorMessage(error)}`,
         },
       ],
     };

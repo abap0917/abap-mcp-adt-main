@@ -1,16 +1,17 @@
 /**
- * CreateTransport Handler - Create new ABAP transport request via ADT API
+ * CreateTransport Handler - Create a new ABAP transport request.
  *
- * Uses TransportBuilder from @babamba2/mcp-abap-adt-clients for all operations.
- * Session and lock management handled internally by builder.
- *
- * Workflow: create
+ * Uses the corrected in-repo transport helper (`lib/transport/createTransport`)
+ * which builds the CTS XML with a RAW target name — the client lib wraps the
+ * target in `/…/` and the CTS endpoint rejects/misinterprets that.
+ * When `target_system` is omitted, the system's transport target is
+ * auto-discovered from E070 (e.g. VSD) instead of falling back to LOCAL.
  */
 import type { HandlerContext } from '../../../lib/handlers/interfaces';
 export declare const TOOL_DEFINITION: {
     readonly name: "CreateTransport";
     readonly available_in: readonly ["onprem", "cloud"];
-    readonly description: "Create a new ABAP transport request in SAP system for development objects.";
+    readonly description: "Create a new ABAP transport request (Workbench K or Customizing T). Target system is auto-discovered from the system (e.g. VSD) when omitted; pass target_system explicitly to override. Use ListTransportTargets to see available targets.";
     readonly inputSchema: {
         readonly type: "object";
         readonly properties: {
@@ -26,7 +27,7 @@ export declare const TOOL_DEFINITION: {
             };
             readonly target_system: {
                 readonly type: "string";
-                readonly description: "Target system for transport (optional, e.g., 'PRD', 'QAS'). If not provided or empty, uses 'LOCAL'";
+                readonly description: "Target system for transport (optional). Auto-discovered from E070 when omitted (e.g. 'VSD'). Pass the raw system ID, no slashes.";
             };
             readonly owner: {
                 readonly type: "string";
@@ -44,15 +45,12 @@ interface CreateTransportArgs {
 }
 /**
  * Main handler for CreateTransport MCP tool
- *
- * Uses TransportBuilder from @babamba2/mcp-abap-adt-clients for all operations
- * Session and lock management handled internally by builder
  */
 export declare function handleCreateTransport(context: HandlerContext, args: CreateTransportArgs): Promise<{
     isError: boolean;
     content: {
-        type: string;
-        text: any;
+        type: "text";
+        text: string;
     }[];
 }>;
 export {};

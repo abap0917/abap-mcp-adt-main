@@ -3,6 +3,7 @@
  */
 
 import { XMLParser } from 'fast-xml-parser';
+import { toErrorMessage } from '../../../lib/adtError';
 import { createAdtClient } from '../../../lib/clients';
 import type { HandlerContext } from '../../../lib/handlers/interfaces';
 export const TOOL_DEFINITION = {
@@ -150,7 +151,7 @@ export async function handleGetObjectStructure(
       content: [
         {
           type: 'text',
-          text: `ADT error: ${String(error)}`,
+          text: `Object structure lookup failed: ${toErrorMessage(error)}`,
         },
       ],
     };

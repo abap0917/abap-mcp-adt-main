@@ -37,8 +37,8 @@ type HandlerTransportCreateArgs = {
 export declare function handleHandlerTransportCreate(context: HandlerContext, args: HandlerTransportCreateArgs): Promise<{
     isError: boolean;
     content: {
-        type: string;
-        text: any;
+        type: "text";
+        text: string;
     }[];
 }>;
 export {};

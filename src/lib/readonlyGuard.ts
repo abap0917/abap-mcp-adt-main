@@ -51,6 +51,8 @@ const TIER_GUARDED_TOOLS: ReadonlySet<string> = new Set([
   'AbapDebugDeleteBreakpoint',
   'AbapDebugStep',
   'AbapDebugSetVariable',
+  // report execution (runs ABAP code on SAP)
+  'RunReport',
 ]);
 
 /** Tools that are allowed on QA despite being in RUNTIME_EXECUTION_TOOLS. */

@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TOOL_DEFINITION = void 0;
 exports.handleGetTypeInfo = handleGetTypeInfo;
 const fast_xml_parser_1 = require("fast-xml-parser");
+const adtError_1 = require("../../../lib/adtError");
 const getObjectsListCache_1 = require("../../../lib/getObjectsListCache");
 const utils_1 = require("../../../lib/utils");
 exports.TOOL_DEFINITION = {
@@ -152,7 +153,7 @@ async function handleGetTypeInfo(context, args) {
             content: [
                 {
                     type: 'text',
-                    text: `ADT error: ${String(error)}`,
+                    text: `Type info lookup failed: ${(0, adtError_1.toErrorMessage)(error)}`,
                 },
             ],
         };
@@ -224,7 +225,7 @@ async function handleGetTypeInfo(context, args) {
             content: [
                 {
                     type: 'text',
-                    text: `ADT error: ${String(error)}`,
+                    text: `Type info lookup failed: ${(0, adtError_1.toErrorMessage)(error)}`,
                 },
             ],
         };

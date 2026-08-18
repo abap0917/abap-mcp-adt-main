@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DebugHandlersGroup = void 0;
 const handleAbapDebug_1 = require("../../../handlers/debugger/handleAbapDebug");
 const handleRunAtcAnalysis_1 = require("../../../handlers/quality/handleRunAtcAnalysis");
+const handleRunReport_1 = require("../../../handlers/quality/handleRunReport");
 const BaseHandlerGroup_js_1 = require("../base/BaseHandlerGroup.js");
 const [DebugSession_Tool, DebugSetBreakpoint_Tool, DebugDeleteBreakpoint_Tool, DebugStep_Tool, DebugVariable_Tool, DebugStack_Tool, DebugSetVariable_Tool,] = handleAbapDebug_1.TOOL_DEFINITIONS;
 /**
@@ -46,6 +47,10 @@ class DebugHandlersGroup extends BaseHandlerGroup_js_1.BaseHandlerGroup {
             {
                 toolDefinition: handleRunAtcAnalysis_1.TOOL_DEFINITION,
                 handler: (a) => (0, handleRunAtcAnalysis_1.handleRunAtcAnalysis)(this.context, a),
+            },
+            {
+                toolDefinition: handleRunReport_1.TOOL_DEFINITION,
+                handler: (a) => (0, handleRunReport_1.handleRunReport)(this.context, a),
             },
         ];
     }

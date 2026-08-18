@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TOOL_DEFINITION = void 0;
 exports.handleGetAdtTypes = handleGetAdtTypes;
 const fast_xml_parser_1 = require("fast-xml-parser");
+const adtError_1 = require("../../../lib/adtError");
 const clients_1 = require("../../../lib/clients");
 exports.TOOL_DEFINITION = {
     name: 'GetAdtTypes',
@@ -102,7 +103,7 @@ async function handleGetAdtTypes(context, _args) {
             content: [
                 {
                     type: 'text',
-                    text: `ADT error: ${String(error)}`,
+                    text: `Failed to fetch ADT types: ${(0, adtError_1.toErrorMessage)(error)}`,
                 },
             ],
         };
