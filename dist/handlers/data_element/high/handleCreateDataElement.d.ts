@@ -83,6 +83,14 @@ export declare const TOOL_DEFINITION: {
                 readonly type: "string";
                 readonly description: "Set/Get parameter ID. Applied during update step after creation.";
             };
+            readonly master_system: {
+                readonly type: "string";
+                readonly description: "Optional master system SID for the ADT create XML (e.g. S4C). Defaults to the resolved system context / SAP_MASTER_SYSTEM.";
+            };
+            readonly responsible: {
+                readonly type: "string";
+                readonly description: "Optional responsible user for the ADT create XML. Defaults to SAP_RESPONSIBLE / SAP_USERNAME.";
+            };
         };
         readonly required: readonly ["data_element_name", "package_name"];
     };
@@ -105,6 +113,13 @@ interface DataElementArgs {
     search_help_parameter?: string;
     set_get_parameter?: string;
     activate?: boolean;
+    /**
+     * Optional master system (SID) written into the ADT create XML
+     * (e.g. 'S4C'). Falls back to the resolved system context / env.
+     */
+    master_system?: string;
+    /** Optional responsible user written into the ADT create XML. */
+    responsible?: string;
 }
 /**
  * Main handler for CreateDataElement MCP tool

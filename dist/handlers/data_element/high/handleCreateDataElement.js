@@ -11,7 +11,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TOOL_DEFINITION = void 0;
 exports.handleCreateDataElement = handleCreateDataElement;
 const clients_1 = require("../../../lib/clients");
+const ddicDataElementUpdate_1 = require("../../../lib/ddicDataElementUpdate");
 const rfcBackend_1 = require("../../../lib/rfcBackend");
+const systemContext_1 = require("../../../lib/systemContext");
 const utils_1 = require("../../../lib/utils");
 const transportValidation_js_1 = require("../../../utils/transportValidation.js");
 exports.TOOL_DEFINITION = {
@@ -96,6 +98,14 @@ exports.TOOL_DEFINITION = {
                 type: 'string',
                 description: 'Set/Get parameter ID. Applied during update step after creation.',
             },
+            master_system: {
+                type: 'string',
+                description: 'Optional master system SID for the ADT create XML (e.g. S4C). Defaults to the resolved system context / SAP_MASTER_SYSTEM.',
+            },
+            responsible: {
+                type: 'string',
+                description: 'Optional responsible user for the ADT create XML. Defaults to SAP_RESPONSIBLE / SAP_USERNAME.',
+            },
         },
         required: ['data_element_name', 'package_name'],
     },
@@ -120,6 +130,29 @@ async function handleCreateDataElement(context, args) {
         (0, transportValidation_js_1.validateTransportRequest)(args.package_name, args.transport_request);
         const typedArgs = args;
         const dataElementName = typedArgs.data_element_name.toUpperCase();
+        // ADT create/update XML carries masterSystem + responsible. The client
+        // library writes `adtcore:responsible=""` when the value is empty and
+        // omits masterSystem — the SAP server rejects that with "条件检查失败"
+        // (conditional check failed), so resolve real values from the system
+        // context / env before delegating.
+        const sysCtx = (0, systemContext_1.getSystemContext)();
+        const masterSystem = typedArgs.master_system ||
+            sysCtx.masterSystem ||
+            process.env.SAP_MASTER_SYSTEM ||
+            undefined;
+        const responsible = typedArgs.responsible ||
+            sysCtx.responsible ||
+            process.env.SAP_RESPONSIBLE ||
+            process.env.SAP_USERNAME ||
+            undefined;
+        // Field labels are required by the ADT create/update XML ("缺少描述"
+        // when empty) — default each to the description (truncated to the
+        // allowed label lengths), mirroring how SE11 fills them.
+        const descLabel = typedArgs.description || dataElementName;
+        const shortLabel = (typedArgs.short_label ?? descLabel).slice(0, 10);
+        const mediumLabel = (typedArgs.medium_label ?? descLabel).slice(0, 20);
+        const longLabel = (typedArgs.long_label ?? descLabel).slice(0, 40);
+        const headingLabel = (typedArgs.heading_label ?? descLabel).slice(0, 55);
         // ECC fallback — ADT /sap/bc/adt/ddic/dataelements is absent on
         // BASIS < 7.50. Route through ZMCP_ADT_DDIC_DTEL OData FI.
         if (process.env.SAP_VERSION?.toUpperCase() === 'ECC') {
@@ -138,7 +171,7 @@ async function handleCreateDataElement(context, args) {
                 description: typedArgs.description || dataElementName,
             });
             // Create (registers bare object in SAP)
-            await client.getDataElement().create({
+            const createConfig = {
                 dataElementName,
                 description: typedArgs.description || dataElementName,
                 packageName: typedArgs.package_name,
@@ -148,28 +181,39 @@ async function handleCreateDataElement(context, args) {
                 length: typedArgs.length,
                 decimals: typedArgs.decimals,
                 transportRequest: typedArgs.transport_request,
-            });
+                masterSystem,
+                responsible,
+                shortLabel,
+                mediumLabel,
+                longLabel,
+                headingLabel,
+            };
+            await client.getDataElement().create(createConfig);
             // Lock
             lockHandle = await client.getDataElement().lock({ dataElementName });
-            // Update with read-modify-write: reads current XML from SAP, patches with properties, PUTs back
-            await client.getDataElement().update({
+            // Update with read-modify-write: reads current XML from SAP, patches
+            // with properties, PUTs back. Done in-process (not via the client
+            // library) because the client's attribute patch targets the first
+            // `adtcore:description` match — which on some systems is the
+            // packageRef's, leaving the root without a description and failing
+            // with "缺少描述".
+            await (0, ddicDataElementUpdate_1.updateDataElementXml)(connection, {
                 dataElementName,
-                packageName: typedArgs.package_name,
                 description: typedArgs.description || dataElementName,
                 dataType: typedArgs.data_type || 'CHAR',
                 length: typedArgs.length || 100,
                 decimals: typedArgs.decimals || 0,
-                shortLabel: typedArgs.short_label,
-                mediumLabel: typedArgs.medium_label,
-                longLabel: typedArgs.long_label,
-                headingLabel: typedArgs.heading_label,
                 typeKind: typeKind,
                 typeName: typedArgs.type_name,
                 searchHelp: typedArgs.search_help,
                 searchHelpParameter: typedArgs.search_help_parameter,
                 setGetParameter: typedArgs.set_get_parameter,
                 transportRequest: typedArgs.transport_request,
-            }, { lockHandle });
+                shortLabel,
+                mediumLabel,
+                longLabel,
+                headingLabel,
+            }, lockHandle);
             // Unlock
             await client.getDataElement().unlock({ dataElementName }, lockHandle);
             lockHandle = undefined;

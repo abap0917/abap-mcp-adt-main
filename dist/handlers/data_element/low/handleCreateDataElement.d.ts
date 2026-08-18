@@ -81,6 +81,10 @@ interface CreateDataElementArgs {
     type_name?: string;
     length?: number;
     decimals?: number;
+    short_label?: string;
+    medium_label?: string;
+    long_label?: string;
+    heading_label?: string;
     session_id?: string;
     session_state?: {
         cookies?: string;

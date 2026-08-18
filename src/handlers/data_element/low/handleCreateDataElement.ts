@@ -7,6 +7,7 @@
 
 import { createAdtClient } from '../../../lib/clients';
 import type { HandlerContext } from '../../../lib/handlers/interfaces';
+import { getSystemContext } from '../../../lib/systemContext';
 import {
   type AxiosResponse,
   restoreSessionInConnection,
@@ -95,6 +96,10 @@ interface CreateDataElementArgs {
   type_name?: string;
   length?: number;
   decimals?: number;
+  short_label?: string;
+  medium_label?: string;
+  long_label?: string;
+  heading_label?: string;
   session_id?: string;
   session_state?: {
     cookies?: string;
@@ -124,6 +129,10 @@ export async function handleCreateDataElement(
       type_name,
       length,
       decimals,
+      short_label,
+      medium_label,
+      long_label,
+      heading_label,
       session_id,
       session_state,
     } = args as CreateDataElementArgs;
@@ -177,6 +186,8 @@ export async function handleCreateDataElement(
       const typeKind = typeKindMap[rawTypeKind] || 'domain';
 
       // Create data element
+      const sysCtx = getSystemContext();
+      const descLabel = description || dataElementName;
       const createConfig: any = {
         dataElementName,
         description,
@@ -187,6 +198,17 @@ export async function handleCreateDataElement(
         length: length,
         decimals: decimals,
         transportRequest: transport_request,
+        masterSystem:
+          sysCtx.masterSystem || process.env.SAP_MASTER_SYSTEM || undefined,
+        responsible:
+          sysCtx.responsible ||
+          process.env.SAP_RESPONSIBLE ||
+          process.env.SAP_USERNAME ||
+          undefined,
+        shortLabel: (short_label ?? descLabel).slice(0, 10),
+        mediumLabel: (medium_label ?? descLabel).slice(0, 20),
+        longLabel: (long_label ?? descLabel).slice(0, 40),
+        headingLabel: (heading_label ?? descLabel).slice(0, 55),
       };
 
       const createState = await client.getDataElement().create(createConfig);

@@ -8,6 +8,7 @@
  */
 
 import { createAdtClient } from '../../../lib/clients';
+import { updateDataElementXml } from '../../../lib/ddicDataElementUpdate';
 import type { HandlerContext } from '../../../lib/handlers/interfaces';
 import { callDdicActivate, callDdicDtel } from '../../../lib/rfcBackend';
 import {
@@ -240,30 +241,29 @@ export async function handleUpdateDataElement(
           .getDataElement()
           .lock({ dataElementName: dataElementName });
 
-        // Update with properties
-        const properties = {
-          dataType: typedArgs.data_type,
-          length: typedArgs.length,
-          decimals: typedArgs.decimals,
-          shortLabel: typedArgs.field_label_short,
-          mediumLabel: typedArgs.field_label_medium,
-          longLabel: typedArgs.field_label_long,
-          headingLabel: typedArgs.field_label_heading,
-          typeKind: typeKind,
-          typeName: typedArgs.type_name?.toUpperCase(),
-          searchHelp: typedArgs.search_help,
-          searchHelpParameter: typedArgs.search_help_parameter,
-          setGetParameter: typedArgs.set_get_parameter,
-        };
-        updateState = await client.getDataElement().update(
+        // Update with properties (in-process read-modify-write; the client
+        // library's attribute patch can miss the root adtcore:description on
+        // some systems, failing the PUT with "缺少描述").
+        updateState = await updateDataElementXml(
+          connection,
           {
             dataElementName,
-            packageName: typedArgs.package_name,
-            transportRequest: typedArgs.transport_request,
             description: typedArgs.description || dataElementName,
-            ...properties,
+            dataType: typedArgs.data_type,
+            length: typedArgs.length,
+            decimals: typedArgs.decimals,
+            shortLabel: typedArgs.field_label_short,
+            mediumLabel: typedArgs.field_label_medium,
+            longLabel: typedArgs.field_label_long,
+            headingLabel: typedArgs.field_label_heading,
+            typeKind: typeKind,
+            typeName: typedArgs.type_name?.toUpperCase(),
+            searchHelp: typedArgs.search_help,
+            searchHelpParameter: typedArgs.search_help_parameter,
+            setGetParameter: typedArgs.set_get_parameter,
+            transportRequest: typedArgs.transport_request,
           },
-          { lockHandle },
+          lockHandle,
         );
 
         // Check

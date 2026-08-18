@@ -735,6 +735,42 @@ function isReportMissingNoiseText(text: string): boolean {
   );
 }
 
+/**
+ * Detect parser-artifact errors that some SAP systems' compiler emits for
+ * VALID ABAP constructs — decimal literals like `0.6` ("The statement '6'
+ * is invalid") and inline method-signature type declarations like
+ * `TYPE p DECIMALS 2` / `RETURNING TYPE c LENGTH 1` ("Unable to
+ * interpret '2'"). On such systems the real activation compiler rejects
+ * the same constructs, so the pre-check must still fail — but the raw
+ * message gives the agent no clue HOW to fix it. Appends an actionable
+ * hint when these patterns appear. Messages are localized (ZH/EN/DE).
+ */
+function compilerQuirkHint(realErrors: ParsedCheckRunResult['errors']): string {
+  const joined = realErrors.map((e) => e.text).join(' ');
+  const quoted = `['"\u201c\u201d][^'"\u201c\u201d]*['"\u201c\u201d]`;
+  const matches =
+    new RegExp(
+      `(?:statement|语句)\\s+${quoted}\\s+(?:is invalid|无效)`,
+      'i',
+    ).test(joined) ||
+    /(?:unable to interpret|无法解释)/i.test(joined) ||
+    /(?:fully typed|完全类型化)/i.test(joined) ||
+    /(?:statement is not accessible|语句不可访问|statement is not defined|语句未定义)/i.test(
+      joined,
+    ) ||
+    new RegExp(
+      `(?:statement|语句)\\s+${quoted}\\s+(?:is not allowed|不允许)`,
+      'i',
+    ).test(joined);
+  if (!matches) return '';
+  return (
+    " — This SAP system's compiler rejects some standard constructs: decimal literals like `0.6` " +
+    '(rewrite as `6 / 10` or `60 / 100`), inline method-signature type declarations such as ' +
+    '`TYPE p DECIMALS 2` / `RETURNING TYPE c LENGTH 1` (declare the types globally with TYPES instead), ' +
+    'and local class definitions inside reports (use separate class objects instead).'
+  );
+}
+
 export function assertNoCheckErrors(
   result: ParsedCheckRunResult,
   kind: string,
@@ -767,7 +803,7 @@ export function assertNoCheckErrors(
 
   const message = `${kind} ${name} preCheck syntax check failed (${realErrors.length} error${
     realErrors.length === 1 ? '' : 's'
-  }): ${full}`;
+  }): ${full}${compilerQuirkHint(realErrors)}`;
 
   const error: any = new Error(message);
   error.isPreCheckFailure = true;

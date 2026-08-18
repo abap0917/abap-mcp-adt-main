@@ -9,6 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TOOL_DEFINITION = void 0;
 exports.handleCreateDataElement = handleCreateDataElement;
 const clients_1 = require("../../../lib/clients");
+const systemContext_1 = require("../../../lib/systemContext");
 const utils_1 = require("../../../lib/utils");
 exports.TOOL_DEFINITION = {
     name: 'CreateDataElementLow',
@@ -78,7 +79,7 @@ exports.TOOL_DEFINITION = {
 async function handleCreateDataElement(context, args) {
     const { connection, logger } = context;
     try {
-        const { data_element_name, description, package_name, transport_request, data_type, type_kind, type_name, length, decimals, session_id, session_state, } = args;
+        const { data_element_name, description, package_name, transport_request, data_type, type_kind, type_name, length, decimals, short_label, medium_label, long_label, heading_label, session_id, session_state, } = args;
         // Validation
         if (!data_element_name || !description || !package_name) {
             return (0, utils_1.return_error)(new Error('data_element_name, description, and package_name are required'));
@@ -113,6 +114,8 @@ async function handleCreateDataElement(context, args) {
             const rawTypeKind = type_kind || 'E';
             const typeKind = typeKindMap[rawTypeKind] || 'domain';
             // Create data element
+            const sysCtx = (0, systemContext_1.getSystemContext)();
+            const descLabel = description || dataElementName;
             const createConfig = {
                 dataElementName,
                 description,
@@ -123,6 +126,15 @@ async function handleCreateDataElement(context, args) {
                 length: length,
                 decimals: decimals,
                 transportRequest: transport_request,
+                masterSystem: sysCtx.masterSystem || process.env.SAP_MASTER_SYSTEM || undefined,
+                responsible: sysCtx.responsible ||
+                    process.env.SAP_RESPONSIBLE ||
+                    process.env.SAP_USERNAME ||
+                    undefined,
+                shortLabel: (short_label ?? descLabel).slice(0, 10),
+                mediumLabel: (medium_label ?? descLabel).slice(0, 20),
+                longLabel: (long_label ?? descLabel).slice(0, 40),
+                headingLabel: (heading_label ?? descLabel).slice(0, 55),
             };
             const createState = await client.getDataElement().create(createConfig);
             const createResult = createState.createResult;

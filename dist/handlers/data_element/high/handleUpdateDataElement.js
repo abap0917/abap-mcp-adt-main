@@ -11,6 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TOOL_DEFINITION = void 0;
 exports.handleUpdateDataElement = handleUpdateDataElement;
 const clients_1 = require("../../../lib/clients");
+const ddicDataElementUpdate_1 = require("../../../lib/ddicDataElementUpdate");
 const rfcBackend_1 = require("../../../lib/rfcBackend");
 const utils_1 = require("../../../lib/utils");
 const transportValidation_js_1 = require("../../../utils/transportValidation.js");
@@ -183,8 +184,12 @@ async function handleUpdateDataElement(context, args) {
                 lockHandle = await client
                     .getDataElement()
                     .lock({ dataElementName: dataElementName });
-                // Update with properties
-                const properties = {
+                // Update with properties (in-process read-modify-write; the client
+                // library's attribute patch can miss the root adtcore:description on
+                // some systems, failing the PUT with "缺少描述").
+                updateState = await (0, ddicDataElementUpdate_1.updateDataElementXml)(connection, {
+                    dataElementName,
+                    description: typedArgs.description || dataElementName,
                     dataType: typedArgs.data_type,
                     length: typedArgs.length,
                     decimals: typedArgs.decimals,
@@ -197,14 +202,8 @@ async function handleUpdateDataElement(context, args) {
                     searchHelp: typedArgs.search_help,
                     searchHelpParameter: typedArgs.search_help_parameter,
                     setGetParameter: typedArgs.set_get_parameter,
-                };
-                updateState = await client.getDataElement().update({
-                    dataElementName,
-                    packageName: typedArgs.package_name,
                     transportRequest: typedArgs.transport_request,
-                    description: typedArgs.description || dataElementName,
-                    ...properties,
-                }, { lockHandle });
+                }, lockHandle);
                 // Check
                 try {
                     await (0, utils_1.safeCheckOperation)(() => client.getDataElement().check({ dataElementName }), dataElementName, {
